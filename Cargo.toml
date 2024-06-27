@@ -2,8 +2,12 @@
 name = "millisecond"
 version = "0.1.0"
 edition = "2021"
-authors = ["Morteza Raeisi<mrraeisi@outlook.com>"]
-license = "MIT"
+authors = ["Morteza Raeisi<raeisimv@outlook.com>"]
 repository = "https://github.com/raeisimv/millisecond.git"
+categories = ["visualization", "value-formatting", "date-and-time", "no-std", "parsing"]
+keywords = ["millisecond", "pretty-milliscond", "pretty-ms", "pretty-date", "date"]
+description = "Format milliseconds into a human-readable format. It also, parse a milliseonds into its core parts, including years, days, hours, etc. This package has no-std dependency."
+readme = "readme.md"
+license = "MIT"
 
 [dependencies]
