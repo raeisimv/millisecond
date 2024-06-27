@@ -14,6 +14,8 @@ pub struct Millisecond {
     pub nanos: u64,
 }
 
+unsafe impl Sync for Millisecond {}
+
 impl Millisecond {
     pub fn from_millis(val: u128) -> Self {
         let total_seconds = (val / 1000) as u64;
