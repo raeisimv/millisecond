@@ -1,18 +1,22 @@
-#[derive(Debug, Clone, PartialOrd, PartialEq, Ord, Eq)]
+use core::fmt::{Display, Formatter};
+
+use crate::formatter::MillisecondPart;
+
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Millisecond {
     pub years: u64,
     pub days: u64,
     pub hours: u64,
     pub minutes: u64,
     pub seconds: u64,
-    pub milliseconds: u64,
-    pub microseconds: u64,
-    pub nanoseconds: u64,
+    pub millis: u64,
+    pub micros: u64,
+    pub nanos: u64,
 }
 
 impl Millisecond {
-    pub fn from_millis(val: u64) -> Self {
-        let total_seconds = val / 1000;
+    pub fn from_millis(val: u128) -> Self {
+        let total_seconds = (val / 1000) as u64;
         let total_minutes = total_seconds / 60;
         let total_hours = total_minutes / 60;
         let total_days = total_hours / 24;
@@ -23,9 +27,9 @@ impl Millisecond {
             hours: total_hours % 24,
             minutes: total_minutes % 60,
             seconds: total_seconds % 60,
-            milliseconds: val % 1000,
-            microseconds: 0,
-            nanoseconds: 0,
+            millis: (val % 1000) as u64,
+            micros: 0,
+            nanos: 0,
         }
     }
     pub fn from_nanos(val: u128) -> Self {
@@ -42,16 +46,16 @@ impl Millisecond {
             hours: total_hours % 24,
             minutes: total_minutes % 60,
             seconds: total_seconds % 60,
-            milliseconds: (total_millis % 1000) as _,
-            microseconds: (total_micros % 1000) as _,
-            nanoseconds: (val % 1000) as _,
+            millis: (total_millis % 1000) as _,
+            micros: (total_micros % 1000) as _,
+            nanos: (val % 1000) as _,
         }
     }
     pub fn from_micros(val: u128) -> Self {
         Self::from_nanos(val * 1000)
     }
     pub fn from_secs(val: u64) -> Self {
-        Self::from_millis(val * 1000)
+        Self::from_millis(val as u128 * 1000)
     }
     pub fn from_minutes(val: u64) -> Self {
         Self::from_secs(val * 60)
@@ -81,7 +85,7 @@ mod tests {
         assert_eq!(x.hours, 0);
         assert_eq!(x.minutes, 0);
         assert_eq!(x.seconds, 10);
-        assert_eq!(x.milliseconds, 123);
+        assert_eq!(x.millis, 123);
     }
     #[test]
     fn should_split_from_millis() {
@@ -92,9 +96,9 @@ mod tests {
                 hours: 0,
                 minutes: 0,
                 seconds: 0,
-                milliseconds: 0,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
             }),
             (1, Millisecond {
                 years: 0,
@@ -102,9 +106,9 @@ mod tests {
                 hours: 0,
                 minutes: 0,
                 seconds: 0,
-                milliseconds: 1,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 1,
+                micros: 0,
+                nanos: 0,
             }),
             (999, Millisecond {
                 years: 0,
@@ -112,9 +116,9 @@ mod tests {
                 hours: 0,
                 minutes: 0,
                 seconds: 0,
-                milliseconds: 999,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 999,
+                micros: 0,
+                nanos: 0,
             }),
             (1000, Millisecond {
                 years: 0,
@@ -122,9 +126,9 @@ mod tests {
                 hours: 0,
                 minutes: 0,
                 seconds: 1,
-                milliseconds: 0,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
             }),
             (1000 + 400, Millisecond {
                 years: 0,
@@ -132,9 +136,9 @@ mod tests {
                 hours: 0,
                 minutes: 0,
                 seconds: 1,
-                milliseconds: 400,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 400,
+                micros: 0,
+                nanos: 0,
             }),
             ((1000 * 2) + 400, Millisecond {
                 years: 0,
@@ -142,9 +146,9 @@ mod tests {
                 hours: 0,
                 minutes: 0,
                 seconds: 2,
-                milliseconds: 400,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 400,
+                micros: 0,
+                nanos: 0,
             }),
             (1000 * 55, Millisecond {
                 years: 0,
@@ -152,9 +156,9 @@ mod tests {
                 hours: 0,
                 minutes: 0,
                 seconds: 55,
-                milliseconds: 0,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
             }),
             (1000 * 67, Millisecond {
                 years: 0,
@@ -162,9 +166,9 @@ mod tests {
                 hours: 0,
                 minutes: 1,
                 seconds: 7,
-                milliseconds: 0,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
             }),
             (1000 * 60 * 5, Millisecond {
                 years: 0,
@@ -172,9 +176,9 @@ mod tests {
                 hours: 0,
                 minutes: 5,
                 seconds: 0,
-                milliseconds: 0,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
             }),
             (1000 * 60 * 67, Millisecond {
                 years: 0,
@@ -182,9 +186,9 @@ mod tests {
                 hours: 1,
                 minutes: 7,
                 seconds: 0,
-                milliseconds: 0,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
             }),
             (1000 * 60 * 60 * 12, Millisecond {
                 years: 0,
@@ -192,9 +196,9 @@ mod tests {
                 hours: 12,
                 minutes: 0,
                 seconds: 0,
-                milliseconds: 0,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
             }),
             (1000 * 60 * 60 * 40, Millisecond {
                 years: 0,
@@ -202,9 +206,9 @@ mod tests {
                 hours: 16,
                 minutes: 0,
                 seconds: 0,
-                milliseconds: 0,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
             }),
             (1000 * 60 * 60 * 999, Millisecond {
                 years: 0,
@@ -212,9 +216,9 @@ mod tests {
                 hours: 15,
                 minutes: 0,
                 seconds: 0,
-                milliseconds: 0,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
             }),
             (1000 * 60 * 60 * 24 * 465, Millisecond {
                 years: 1,
@@ -222,9 +226,9 @@ mod tests {
                 hours: 0,
                 minutes: 0,
                 seconds: 0,
-                milliseconds: 0,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
             }),
             (1000 * 60 * 67 * 24 * 465, Millisecond {
                 years: 1,
@@ -232,9 +236,9 @@ mod tests {
                 hours: 6,
                 minutes: 0,
                 seconds: 0,
-                milliseconds: 0,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
             }),
             (119_999, Millisecond {
                 years: 0,
@@ -242,9 +246,9 @@ mod tests {
                 hours: 0,
                 minutes: 1,
                 seconds: 59,
-                milliseconds: 999,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 999,
+                micros: 0,
+                nanos: 0,
             }),
             (120_000, Millisecond {
                 years: 0,
@@ -252,9 +256,9 @@ mod tests {
                 hours: 0,
                 minutes: 2,
                 seconds: 0,
-                milliseconds: 0,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
             }),
             (9007199254740991, Millisecond {
                 years: 285616,
@@ -262,19 +266,19 @@ mod tests {
                 hours: 8,
                 minutes: 59,
                 seconds: 0,
-                milliseconds: 991,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 991,
+                micros: 0,
+                nanos: 0,
             }), // "285616y 151d 8h 59m 0.9s"
-            (u64::MAX, Millisecond {
+            (u128::MAX, Millisecond {
                 years: 584942417,
                 days: 129,
                 hours: 14,
                 minutes: 25,
                 seconds: 51,
-                milliseconds: 615,
-                microseconds: 0,
-                nanoseconds: 0,
+                millis: 615,
+                micros: 0,
+                nanos: 0,
             }),
         ];
         for (k, v) in cases {
@@ -292,9 +296,9 @@ mod tests {
             hours: 0,
             minutes: 0,
             seconds: 0,
-            milliseconds: 0,
-            microseconds: 1,
-            nanoseconds: 0,
+            millis: 0,
+            micros: 1,
+            nanos: 0,
         });
         let x = Millisecond::from_micros(1_800);
         assert_eq!(x, Millisecond {
@@ -303,9 +307,9 @@ mod tests {
             hours: 0,
             minutes: 0,
             seconds: 0,
-            milliseconds: 1,
-            microseconds: 800,
-            nanoseconds: 0,
+            millis: 1,
+            micros: 800,
+            nanos: 0,
         });
     }
     #[test]
@@ -317,9 +321,9 @@ mod tests {
             hours: 0,
             minutes: 0,
             seconds: 0,
-            milliseconds: 0,
-            microseconds: 0,
-            nanoseconds: 1,
+            millis: 0,
+            micros: 0,
+            nanos: 1,
         });
         let x = Millisecond::from_nanos(1_800);
         assert_eq!(x, Millisecond {
@@ -328,9 +332,9 @@ mod tests {
             hours: 0,
             minutes: 0,
             seconds: 0,
-            milliseconds: 0,
-            microseconds: 1,
-            nanoseconds: 800,
+            millis: 0,
+            micros: 1,
+            nanos: 800,
         });
     }
     #[test]
@@ -342,9 +346,9 @@ mod tests {
             hours: 0,
             minutes: 0,
             seconds: 1,
-            milliseconds: 0,
-            microseconds: 0,
-            nanoseconds: 0,
+            millis: 0,
+            micros: 0,
+            nanos: 0,
         });
     }
     #[test]
@@ -356,9 +360,9 @@ mod tests {
             hours: 0,
             minutes: 1,
             seconds: 0,
-            milliseconds: 0,
-            microseconds: 0,
-            nanoseconds: 0,
+            millis: 0,
+            micros: 0,
+            nanos: 0,
         });
         let x = Millisecond::from_minutes(61);
         assert_eq!(x, Millisecond {
@@ -367,9 +371,9 @@ mod tests {
             hours: 1,
             minutes: 1,
             seconds: 0,
-            milliseconds: 0,
-            microseconds: 0,
-            nanoseconds: 0,
+            millis: 0,
+            micros: 0,
+            nanos: 0,
         });
     }
     #[test]
@@ -381,9 +385,9 @@ mod tests {
             hours: 1,
             minutes: 0,
             seconds: 0,
-            milliseconds: 0,
-            microseconds: 0,
-            nanoseconds: 0,
+            millis: 0,
+            micros: 0,
+            nanos: 0,
         });
         let x = Millisecond::from_hours(25);
         assert_eq!(x, Millisecond {
@@ -392,9 +396,9 @@ mod tests {
             hours: 1,
             minutes: 0,
             seconds: 0,
-            milliseconds: 0,
-            microseconds: 0,
-            nanoseconds: 0,
+            millis: 0,
+            micros: 0,
+            nanos: 0,
         });
     }
     #[test]
@@ -406,9 +410,9 @@ mod tests {
             hours: 0,
             minutes: 0,
             seconds: 0,
-            milliseconds: 0,
-            microseconds: 0,
-            nanoseconds: 0,
+            millis: 0,
+            micros: 0,
+            nanos: 0,
         });
         let x = Millisecond::from_days(366);
         assert_eq!(x, Millisecond {
@@ -417,9 +421,9 @@ mod tests {
             hours: 0,
             minutes: 0,
             seconds: 0,
-            milliseconds: 0,
-            microseconds: 0,
-            nanoseconds: 0,
+            millis: 0,
+            micros: 0,
+            nanos: 0,
         });
     }
     #[test]
@@ -431,9 +435,9 @@ mod tests {
             hours: 0,
             minutes: 0,
             seconds: 0,
-            milliseconds: 0,
-            microseconds: 0,
-            nanoseconds: 0,
+            millis: 0,
+            micros: 0,
+            nanos: 0,
         });
     }
 }
