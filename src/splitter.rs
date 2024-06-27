@@ -2,6 +2,33 @@ use core::fmt::{Display, Formatter};
 
 use crate::formatter::MillisecondPart;
 
+/// The input value (milliseconds) will be parsed and separated into its parts,
+/// including years, days, seconds, etc.
+/// These part then can be used for different purposes such as formatting a human-readable string
+/// or participate in desired calculations.
+/// ## Example
+/// ```rust
+/// use crate::millisecond::Millisecond;
+///
+/// let ms = Millisecond::from_millis(33023448000);
+///
+/// print!("short: {ms}");
+/// // short: 1y 17d 5h 10m 48s
+///
+/// print!("long: {}", ms.to_long_string());
+/// // long: 1 year 17 days 5 hours 10 minutes 48 seconds
+///
+/// assert_eq!(ms, Millisecond {
+///  years: 1,
+///  days: 17,
+///  hours: 5,
+///  minutes: 10,
+///  seconds: 48,
+///  millis: 0,
+///  micros: 0,
+///  nanos: 0,
+/// });
+/// ```
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Millisecond {
     pub years: u64,
@@ -293,7 +320,7 @@ mod tests {
                 micros: 0,
                 nanos: 0,
             }), // "285616y 151d 8h 59m 0.9s"
-            (u128::MAX, Millisecond {
+            (u64::MAX as u128, Millisecond {
                 years: 584942417,
                 days: 129,
                 hours: 14,
