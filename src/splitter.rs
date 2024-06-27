@@ -73,6 +73,27 @@ impl Millisecond {
     }
 }
 
+impl Millisecond {
+    pub fn to_short_string(&self) -> String {
+        MillisecondPart::from_millisecond(self)
+            .iter()
+            .map(|x| x.to_short_string())
+            .collect::<Vec<String>>()
+            .join(" ")
+    }
+    pub fn to_long_string(&self) -> String {
+        MillisecondPart::from_millisecond(self)
+            .iter()
+            .map(|x| x.to_long_string())
+            .collect::<Vec<String>>()
+            .join(" ")
+    }
+}
+impl Display for Millisecond {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.to_short_string())
+    }
+}
 #[cfg(test)]
 mod tests {
     use Millisecond;
