@@ -29,7 +29,7 @@ use crate::formatter::MillisecondPart;
 ///  nanos: 0,
 /// });
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Default)]
 pub struct Millisecond {
     pub years: u64,
     pub days: u16,
