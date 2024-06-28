@@ -44,59 +44,76 @@ pub struct Millisecond {
 unsafe impl Sync for Millisecond {}
 
 impl Millisecond {
-    pub fn from_millis(val: u128) -> Self {
-        let total_seconds = (val / 1000) as u64;
-        let total_minutes = total_seconds / 60;
-        let total_hours = total_minutes / 60;
-        let total_days = total_hours / 24;
-
+    pub fn from_nanos(nanos: u128) -> Self {
         Self {
-            years: total_days / 365,
-            days: (total_days % 365) as u16,
-            hours: (total_hours % 24) as u8,
-            minutes: (total_minutes % 60) as u8,
-            seconds: (total_seconds % 60) as u8,
-            millis: (val % 1000) as u16,
+            nanos: (nanos % 1000) as u16,
+            ..Self::from_micros(nanos / 1000)
+        }
+    }
+    pub fn from_micros(micros: u128) -> Self {
+        Self {
+            micros: (micros % 1000) as u16,
+            ..Self::from_millis(micros / 1000)
+        }
+    }
+
+    /// Creates an instance from the given milliseconds
+    /// ### example
+    /// ```rust
+    /// use millisecond::Millisecond;
+    /// let ms = Millisecond::from_millis(1_800);
+    /// assert_eq!(ms, Millisecond {
+    ///   years: 0,
+    ///   days: 0,
+    ///   hours: 0,
+    ///   minutes: 0,
+    ///   seconds: 1,
+    ///   millis: 800,
+    ///   micros: 0,
+    ///   nanos: 0,
+    /// })
+    /// ```
+    pub fn from_millis(millis: u128) -> Self {
+        Self {
+            millis: (millis % 1000) as u16,
+            ..Self::from_secs((millis / 1000) as u64)
+        }
+    }
+    pub fn from_secs(seconds: u64) -> Self {
+        Self {
+            seconds: (seconds % 60) as u8,
+            ..Self::from_minutes(seconds / 60)
+        }
+    }
+    pub fn from_minutes(minutes: u64) -> Self {
+        Self {
+            minutes: (minutes % 60) as u8,
+            ..Self::from_hours(minutes / 60)
+        }
+    }
+    pub fn from_hours(hours: u64) -> Self {
+        Self {
+            hours: (hours % 24) as u8,
+            ..Self::from_days(hours / 24)
+        }
+    }
+    pub fn from_days(days: u64) -> Self {
+        Self {
+            days: (days % 365) as u16,
+            ..Self::from_years(days / 365)
+        }
+    }
+    pub fn from_years(years: u64) -> Self {
+        Self {
+            years,
+            days: 0,
+            hours: 0,
+            minutes: 0,
+            seconds: 0,
+            millis: 0,
             micros: 0,
             nanos: 0,
         }
-    }
-    pub fn from_nanos(val: u128) -> Self {
-        let total_micros = val / 1000;
-        let total_millis = total_micros / 1000;
-        let total_seconds = (total_millis / 1000) as u64;
-        let total_minutes = total_seconds / 60;
-        let total_hours = total_minutes / 60;
-        let total_days = total_hours / 24;
-
-        Self {
-            years: total_days / 365,
-            days: (total_days % 365) as u16,
-            hours: (total_hours % 24) as u8,
-            minutes: (total_minutes % 60) as u8,
-            seconds: (total_seconds % 60) as u8,
-            millis: (total_millis % 1000) as u16,
-            micros: (total_micros % 1000) as u16,
-            nanos: (val % 1000) as u16,
-        }
-    }
-    pub fn from_micros(val: u128) -> Self {
-        Self::from_nanos(val * 1000)
-    }
-    pub fn from_secs(val: u64) -> Self {
-        Self::from_millis(val as u128 * 1000)
-    }
-    pub fn from_minutes(val: u64) -> Self {
-        Self::from_secs(val * 60)
-    }
-    pub fn from_hours(val: u64) -> Self {
-        Self::from_minutes(val * 60)
-    }
-    pub fn from_days(val: u64) -> Self {
-        Self::from_hours(val * 24)
-    }
-    pub fn from_years(val: u64) -> Self {
-        Self::from_days(val * 365)
     }
 }
 
