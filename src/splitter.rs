@@ -330,11 +330,27 @@ mod tests {
                 micros: 0,
                 nanos: 0,
             }),
+            (u128::MAX, Millisecond {
+                years: 360324529090,
+                days: 264,
+                hours: 9,
+                minutes: 29,
+                seconds: 55,
+                millis: 455,
+                micros: 0,
+                nanos: 0,
+            }),
         ];
         for (k, v) in cases {
             assert_eq!(Millisecond::from_millis(k), v, "from_millis ({k})");
-            assert_eq!(Millisecond::from_micros(k as u128 * 1_000), v, "from_micros ({k})");
-            assert_eq!(Millisecond::from_nanos(k as u128 * 1_000_000), v, "from_nanos ({k})");
+
+            if let Some(x) = k.checked_mul(1_000) {
+                assert_eq!(Millisecond::from_micros(x), v, "from_micros ({k})");
+            }
+
+            if let Some(x) = k.checked_mul(1_000_000) {
+                assert_eq!(Millisecond::from_nanos(x), v, "from_nanos ({k})");
+            }
         }
     }
     #[test]
