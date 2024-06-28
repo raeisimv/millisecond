@@ -5,14 +5,14 @@ use crate::Millisecond;
 #[derive(Debug)]
 pub enum MillisecondPart {
     Years(u64),
-    Days(u64),
-    Hours(u64),
-    Minutes(u64),
-    Seconds(u64),
-    SecsAndMillis(u64, u64),
-    Millis(u64),
-    Micros(u64),
-    Nanos(u64),
+    Days(u16),
+    Hours(u8),
+    Minutes(u8),
+    Seconds(u8),
+    SecsAndMillis(u8, u16),
+    Millis(u16),
+    Micros(u16),
+    Nanos(u16),
 }
 
 impl MillisecondPart {
@@ -31,15 +31,15 @@ impl MillisecondPart {
     }
     pub fn to_long_string(&self) -> String {
         match self {
-            MillisecondPart::Years(x) => { with_pluralization(x, "year") }
-            MillisecondPart::Days(x) => { with_pluralization(x, "day") }
-            MillisecondPart::Hours(x) => { with_pluralization(x, "hour") }
-            MillisecondPart::Minutes(x) => { with_pluralization(x, "minute") }
-            MillisecondPart::Seconds(x) => { with_pluralization(x, "second") }
-            MillisecondPart::Millis(x) => { with_pluralization(x, "millisecond") }
+            MillisecondPart::Years(x) => { with_pluralization(x, "year", 1) }
+            MillisecondPart::Days(x) => { with_pluralization(x, "day", 1) }
+            MillisecondPart::Hours(x) => { with_pluralization(x, "hour", 1) }
+            MillisecondPart::Minutes(x) => { with_pluralization(x, "minute", 1) }
+            MillisecondPart::Seconds(x) => { with_pluralization(x, "second", 1) }
+            MillisecondPart::Millis(x) => { with_pluralization(x, "millisecond", 1) }
             MillisecondPart::SecsAndMillis(x, y) => { format!("{x}.{y} seconds") }
-            MillisecondPart::Micros(x) => { with_pluralization(x, "microsecond") }
-            MillisecondPart::Nanos(x) => { with_pluralization(x, "nanosecond") }
+            MillisecondPart::Micros(x) => { with_pluralization(x, "microsecond", 1) }
+            MillisecondPart::Nanos(x) => { with_pluralization(x, "nanosecond", 1) }
         }
     }
     pub fn from_millisecond(ms: &Millisecond) -> Vec<MillisecondPart> {
@@ -90,8 +90,8 @@ impl Display for MillisecondPart {
 
 unsafe impl Sync for MillisecondPart {}
 
-fn with_pluralization(val: &u64, text: &str) -> String {
-    if *val == 1 {
+fn with_pluralization<T: Eq + Display>(val: &T, text: &str, single_val: T) -> String {
+    if *val == single_val {
         format!("{val} {text}")
     } else {
         format!("{val} {text}s")

@@ -32,13 +32,13 @@ use crate::formatter::MillisecondPart;
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Millisecond {
     pub years: u64,
-    pub days: u64,
-    pub hours: u64,
-    pub minutes: u64,
-    pub seconds: u64,
-    pub millis: u64,
-    pub micros: u64,
-    pub nanos: u64,
+    pub days: u16,
+    pub hours: u8,
+    pub minutes: u8,
+    pub seconds: u8,
+    pub millis: u16,
+    pub micros: u16,
+    pub nanos: u16,
 }
 
 unsafe impl Sync for Millisecond {}
@@ -52,11 +52,11 @@ impl Millisecond {
 
         Self {
             years: total_days / 365,
-            days: total_days % 365,
-            hours: total_hours % 24,
-            minutes: total_minutes % 60,
-            seconds: total_seconds % 60,
-            millis: (val % 1000) as u64,
+            days: (total_days % 365) as u16,
+            hours: (total_hours % 24) as u8,
+            minutes: (total_minutes % 60) as u8,
+            seconds: (total_seconds % 60) as u8,
+            millis: (val % 1000) as u16,
             micros: 0,
             nanos: 0,
         }
@@ -71,13 +71,13 @@ impl Millisecond {
 
         Self {
             years: total_days / 365,
-            days: total_days % 365,
-            hours: total_hours % 24,
-            minutes: total_minutes % 60,
-            seconds: total_seconds % 60,
-            millis: (total_millis % 1000) as _,
-            micros: (total_micros % 1000) as _,
-            nanos: (val % 1000) as _,
+            days: (total_days % 365) as u16,
+            hours: (total_hours % 24) as u8,
+            minutes: (total_minutes % 60) as u8,
+            seconds: (total_seconds % 60) as u8,
+            millis: (total_millis % 1000) as u16,
+            micros: (total_micros % 1000) as u16,
+            nanos: (val % 1000) as u16,
         }
     }
     pub fn from_micros(val: u128) -> Self {
