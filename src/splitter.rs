@@ -2,10 +2,10 @@ use core::fmt::{Display, Formatter};
 
 use crate::formatter::MillisecondPart;
 
-/// The input value (milliseconds) will be parsed and separated into its parts,
-/// including years, days, seconds, etc.
-/// These part then can be used for different purposes such as formatting a human-readable string
-/// or participate in desired calculations.
+/// The input value, specified in milliseconds, is parsed and decomposed into constituent
+/// components such as years, days, and seconds. These components can subsequently be utilized
+/// for various applications, including the formation of a human-readable string or 
+/// integration into your specific calculations.
 /// ## Example
 /// ```rust
 /// use crate::millisecond::Millisecond;
@@ -44,12 +44,45 @@ pub struct Millisecond {
 unsafe impl Sync for Millisecond {}
 
 impl Millisecond {
+    /// Creates a Millisecond instance using the provided nanoseconds.
+    /// ### example
+    /// ```rust
+    /// use millisecond::Millisecond;
+    /// let ms = Millisecond::from_nanos(1_800);
+    /// assert_eq!(ms, Millisecond {
+    ///   years: 0,
+    ///   days: 0,
+    ///   hours: 0,
+    ///   minutes: 0,
+    ///   seconds: 0,
+    ///   millis: 0,
+    ///   micros: 1,
+    ///   nanos: 800,
+    /// })
+    /// ```
     pub fn from_nanos(nanos: u128) -> Self {
         Self {
             nanos: (nanos % 1000) as u16,
             ..Self::from_micros(nanos / 1000)
         }
     }
+
+    /// Creates a Millisecond instance using the provided microseconds.
+    /// ### example
+    /// ```rust
+    /// use millisecond::Millisecond;
+    /// let ms = Millisecond::from_micros(1_800);
+    /// assert_eq!(ms, Millisecond {
+    ///   years: 0,
+    ///   days: 0,
+    ///   hours: 0,
+    ///   minutes: 0,
+    ///   seconds: 0,
+    ///   millis: 1,
+    ///   micros: 800,
+    ///   nanos: 0,
+    /// })
+    /// ```
     pub fn from_micros(micros: u128) -> Self {
         Self {
             micros: (micros % 1000) as u16,
@@ -57,7 +90,7 @@ impl Millisecond {
         }
     }
 
-    /// Creates an instance from the given milliseconds
+    /// Creates a Millisecond instance using the provided milliseconds.
     /// ### example
     /// ```rust
     /// use millisecond::Millisecond;
@@ -79,30 +112,117 @@ impl Millisecond {
             ..Self::from_secs((millis / 1000) as u64)
         }
     }
+
+
+    /// Creates a Millisecond instance using the provided seconds.
+    /// ### example
+    /// ```rust
+    /// use millisecond::Millisecond;
+    /// let ms = Millisecond::from_secs(61);
+    /// assert_eq!(ms, Millisecond {
+    ///   years: 0,
+    ///   days: 0,
+    ///   hours: 0,
+    ///   minutes: 1,
+    ///   seconds: 1,
+    ///   millis: 0,
+    ///   micros: 0,
+    ///   nanos: 0,
+    /// })
+    /// ```
     pub fn from_secs(seconds: u64) -> Self {
         Self {
             seconds: (seconds % 60) as u8,
             ..Self::from_minutes(seconds / 60)
         }
     }
+
+    /// Creates a Millisecond instance using the provided minutes.
+    /// ### example
+    /// ```rust
+    /// use millisecond::Millisecond;
+    /// let ms = Millisecond::from_minutes(61);
+    /// assert_eq!(ms, Millisecond {
+    ///   years: 0,
+    ///   days: 0,
+    ///   hours: 1,
+    ///   minutes: 1,
+    ///   seconds: 0,
+    ///   millis: 0,
+    ///   micros: 0,
+    ///   nanos: 0,
+    /// })
+    /// ```
     pub fn from_minutes(minutes: u64) -> Self {
         Self {
             minutes: (minutes % 60) as u8,
             ..Self::from_hours(minutes / 60)
         }
     }
+
+
+    /// Creates a Millisecond instance using the provided hours.
+    /// ### example
+    /// ```rust
+    /// use millisecond::Millisecond;
+    /// let ms = Millisecond::from_hours(25);
+    /// assert_eq!(ms, Millisecond {
+    ///   years: 0,
+    ///   days: 1,
+    ///   hours: 1,
+    ///   minutes: 0,
+    ///   seconds: 0,
+    ///   millis: 0,
+    ///   micros: 0,
+    ///   nanos: 0,
+    /// })
+    /// ```
     pub fn from_hours(hours: u64) -> Self {
         Self {
             hours: (hours % 24) as u8,
             ..Self::from_days(hours / 24)
         }
     }
+
+    /// Creates a Millisecond instance using the provided days.
+    /// ### example
+    /// ```rust
+    /// use millisecond::Millisecond;
+    /// let ms = Millisecond::from_hours(366);
+    /// assert_eq!(ms, Millisecond {
+    ///   years: 1,
+    ///   days: 1,
+    ///   hours: 0,
+    ///   minutes: 0,
+    ///   seconds: 0,
+    ///   millis: 0,
+    ///   micros: 0,
+    ///   nanos: 0,
+    /// })
+    /// ```
     pub fn from_days(days: u64) -> Self {
         Self {
             days: (days % 365) as u16,
             ..Self::from_years(days / 365)
         }
     }
+
+    /// Creates a Millisecond instance using the provided years.
+    /// ### example
+    /// ```rust
+    /// use millisecond::Millisecond;
+    /// let ms = Millisecond::from_years(1);
+    /// assert_eq!(ms, Millisecond {
+    ///   years: 1,
+    ///   days: 0,
+    ///   hours: 0,
+    ///   minutes: 0,
+    ///   seconds: 0,
+    ///   millis: 0,
+    ///   micros: 0,
+    ///   nanos: 0,
+    /// })
+    /// ```
     pub fn from_years(years: u64) -> Self {
         Self {
             years,
