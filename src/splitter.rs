@@ -188,7 +188,7 @@ impl Millisecond {
     /// ### example
     /// ```rust
     /// use millisecond::Millisecond;
-    /// let ms = Millisecond::from_hours(366);
+    /// let ms = Millisecond::from_days(366);
     /// assert_eq!(ms, Millisecond {
     ///   years: 1,
     ///   days: 1,
