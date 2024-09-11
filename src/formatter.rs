@@ -18,34 +18,39 @@ pub enum MillisecondPart {
 impl MillisecondPart {
     pub fn to_short_string(&self) -> String {
         match self {
-            MillisecondPart::Years(x) => { format!("{x}y") }
-            MillisecondPart::Days(x) => { format!("{x}d") }
-            MillisecondPart::Hours(x) => { format!("{x}h") }
-            MillisecondPart::Minutes(x) => { format!("{x}m") }
-            MillisecondPart::Seconds(x) => { format!("{x}s") }
-            MillisecondPart::Millis(x) => { format!("{x}ms") }
-            MillisecondPart::SecsAndMillis(x, y) => { format!("{x}.{y}s") }
-            MillisecondPart::Micros(x) => { format!("{x}µs") }
-            MillisecondPart::Nanos(x) => { format!("{x}ns") }
+            MillisecondPart::Years(x) => format!("{x}y"),
+            MillisecondPart::Days(x) => format!("{x}d"),
+            MillisecondPart::Hours(x) => format!("{x}h"),
+            MillisecondPart::Minutes(x) => format!("{x}m"),
+            MillisecondPart::Seconds(x) => format!("{x}s"),
+            MillisecondPart::Millis(x) => format!("{x}ms"),
+            MillisecondPart::SecsAndMillis(x, y) => format!("{x}.{y}s"),
+            MillisecondPart::Micros(x) => format!("{x}µs"),
+            MillisecondPart::Nanos(x) => format!("{x}ns"),
         }
     }
     pub fn to_long_string(&self) -> String {
         match self {
-            MillisecondPart::Years(x) => { with_pluralization(x, "year", 1) }
-            MillisecondPart::Days(x) => { with_pluralization(x, "day", 1) }
-            MillisecondPart::Hours(x) => { with_pluralization(x, "hour", 1) }
-            MillisecondPart::Minutes(x) => { with_pluralization(x, "minute", 1) }
-            MillisecondPart::Seconds(x) => { with_pluralization(x, "second", 1) }
-            MillisecondPart::Millis(x) => { with_pluralization(x, "millisecond", 1) }
-            MillisecondPart::SecsAndMillis(x, y) => { format!("{x}.{y} seconds") }
-            MillisecondPart::Micros(x) => { with_pluralization(x, "microsecond", 1) }
-            MillisecondPart::Nanos(x) => { with_pluralization(x, "nanosecond", 1) }
+            MillisecondPart::Years(x) => with_pluralization(x, "year", 1),
+            MillisecondPart::Days(x) => with_pluralization(x, "day", 1),
+            MillisecondPart::Hours(x) => with_pluralization(x, "hour", 1),
+            MillisecondPart::Minutes(x) => with_pluralization(x, "minute", 1),
+            MillisecondPart::Seconds(x) => with_pluralization(x, "second", 1),
+            MillisecondPart::Millis(x) => with_pluralization(x, "millisecond", 1),
+            MillisecondPart::SecsAndMillis(x, y) => {
+                format!("{x}.{y} seconds")
+            }
+            MillisecondPart::Micros(x) => with_pluralization(x, "microsecond", 1),
+            MillisecondPart::Nanos(x) => with_pluralization(x, "nanosecond", 1),
         }
     }
     pub fn from_millisecond(ms: &Millisecond) -> Vec<MillisecondPart> {
         Self::from_millisecond_with_option(ms, true)
     }
-    pub fn from_millisecond_with_option(ms: &Millisecond, merge_secs_and_millis: bool) -> Vec<MillisecondPart> {
+    pub fn from_millisecond_with_option(
+        ms: &Millisecond,
+        merge_secs_and_millis: bool,
+    ) -> Vec<MillisecondPart> {
         let mut v = vec![];
         if ms.years > 0 {
             v.push(MillisecondPart::Years(ms.years));

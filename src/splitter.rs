@@ -4,7 +4,7 @@ use crate::formatter::MillisecondPart;
 
 /// The input value, specified in milliseconds, is parsed and decomposed into constituent
 /// components such as years, days, and seconds. These components can subsequently be utilized
-/// for various applications, including the formation of a human-readable string or 
+/// for various applications, including the formation of a human-readable string or
 /// integration into your specific calculations.
 /// ## Example
 /// ```rust
@@ -113,7 +113,6 @@ impl Millisecond {
         }
     }
 
-
     /// Creates a Millisecond instance using the provided seconds.
     /// ### example
     /// ```rust
@@ -159,7 +158,6 @@ impl Millisecond {
             ..Self::from_hours(minutes / 60)
         }
     }
-
 
     /// Creates a Millisecond instance using the provided hours.
     /// ### example
@@ -260,8 +258,6 @@ impl Display for Millisecond {
 }
 #[cfg(test)]
 mod tests {
-    use Millisecond;
-
     use super::*;
 
     #[test]
@@ -277,206 +273,266 @@ mod tests {
     #[test]
     fn should_split_from_millis() {
         let cases = [
-            (0, Millisecond {
-                years: 0,
-                days: 0,
-                hours: 0,
-                minutes: 0,
-                seconds: 0,
-                millis: 0,
-                micros: 0,
-                nanos: 0,
-            }),
-            (1, Millisecond {
-                years: 0,
-                days: 0,
-                hours: 0,
-                minutes: 0,
-                seconds: 0,
-                millis: 1,
-                micros: 0,
-                nanos: 0,
-            }),
-            (999, Millisecond {
-                years: 0,
-                days: 0,
-                hours: 0,
-                minutes: 0,
-                seconds: 0,
-                millis: 999,
-                micros: 0,
-                nanos: 0,
-            }),
-            (1000, Millisecond {
-                years: 0,
-                days: 0,
-                hours: 0,
-                minutes: 0,
-                seconds: 1,
-                millis: 0,
-                micros: 0,
-                nanos: 0,
-            }),
-            (1000 + 400, Millisecond {
-                years: 0,
-                days: 0,
-                hours: 0,
-                minutes: 0,
-                seconds: 1,
-                millis: 400,
-                micros: 0,
-                nanos: 0,
-            }),
-            ((1000 * 2) + 400, Millisecond {
-                years: 0,
-                days: 0,
-                hours: 0,
-                minutes: 0,
-                seconds: 2,
-                millis: 400,
-                micros: 0,
-                nanos: 0,
-            }),
-            (1000 * 55, Millisecond {
-                years: 0,
-                days: 0,
-                hours: 0,
-                minutes: 0,
-                seconds: 55,
-                millis: 0,
-                micros: 0,
-                nanos: 0,
-            }),
-            (1000 * 67, Millisecond {
-                years: 0,
-                days: 0,
-                hours: 0,
-                minutes: 1,
-                seconds: 7,
-                millis: 0,
-                micros: 0,
-                nanos: 0,
-            }),
-            (1000 * 60 * 5, Millisecond {
-                years: 0,
-                days: 0,
-                hours: 0,
-                minutes: 5,
-                seconds: 0,
-                millis: 0,
-                micros: 0,
-                nanos: 0,
-            }),
-            (1000 * 60 * 67, Millisecond {
-                years: 0,
-                days: 0,
-                hours: 1,
-                minutes: 7,
-                seconds: 0,
-                millis: 0,
-                micros: 0,
-                nanos: 0,
-            }),
-            (1000 * 60 * 60 * 12, Millisecond {
-                years: 0,
-                days: 0,
-                hours: 12,
-                minutes: 0,
-                seconds: 0,
-                millis: 0,
-                micros: 0,
-                nanos: 0,
-            }),
-            (1000 * 60 * 60 * 40, Millisecond {
-                years: 0,
-                days: 1,
-                hours: 16,
-                minutes: 0,
-                seconds: 0,
-                millis: 0,
-                micros: 0,
-                nanos: 0,
-            }),
-            (1000 * 60 * 60 * 999, Millisecond {
-                years: 0,
-                days: 41,
-                hours: 15,
-                minutes: 0,
-                seconds: 0,
-                millis: 0,
-                micros: 0,
-                nanos: 0,
-            }),
-            (1000 * 60 * 60 * 24 * 465, Millisecond {
-                years: 1,
-                days: 100,
-                hours: 0,
-                minutes: 0,
-                seconds: 0,
-                millis: 0,
-                micros: 0,
-                nanos: 0,
-            }),
-            (1000 * 60 * 67 * 24 * 465, Millisecond {
-                years: 1,
-                days: 154,
-                hours: 6,
-                minutes: 0,
-                seconds: 0,
-                millis: 0,
-                micros: 0,
-                nanos: 0,
-            }),
-            (119_999, Millisecond {
-                years: 0,
-                days: 0,
-                hours: 0,
-                minutes: 1,
-                seconds: 59,
-                millis: 999,
-                micros: 0,
-                nanos: 0,
-            }),
-            (120_000, Millisecond {
-                years: 0,
-                days: 0,
-                hours: 0,
-                minutes: 2,
-                seconds: 0,
-                millis: 0,
-                micros: 0,
-                nanos: 0,
-            }),
-            (9007199254740991, Millisecond {
-                years: 285616,
-                days: 151,
-                hours: 8,
-                minutes: 59,
-                seconds: 0,
-                millis: 991,
-                micros: 0,
-                nanos: 0,
-            }), // "285616y 151d 8h 59m 0.9s"
-            (u64::MAX as u128, Millisecond {
-                years: 584942417,
-                days: 129,
-                hours: 14,
-                minutes: 25,
-                seconds: 51,
-                millis: 615,
-                micros: 0,
-                nanos: 0,
-            }),
-            (u128::MAX, Millisecond {
-                years: 360324529090,
-                days: 264,
-                hours: 9,
-                minutes: 29,
-                seconds: 55,
-                millis: 455,
-                micros: 0,
-                nanos: 0,
-            }),
+            (
+                0,
+                Millisecond {
+                    years: 0,
+                    days: 0,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 0,
+                    millis: 0,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                1,
+                Millisecond {
+                    years: 0,
+                    days: 0,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 0,
+                    millis: 1,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                999,
+                Millisecond {
+                    years: 0,
+                    days: 0,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 0,
+                    millis: 999,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                1000,
+                Millisecond {
+                    years: 0,
+                    days: 0,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 1,
+                    millis: 0,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                1000 + 400,
+                Millisecond {
+                    years: 0,
+                    days: 0,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 1,
+                    millis: 400,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                (1000 * 2) + 400,
+                Millisecond {
+                    years: 0,
+                    days: 0,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 2,
+                    millis: 400,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                1000 * 55,
+                Millisecond {
+                    years: 0,
+                    days: 0,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 55,
+                    millis: 0,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                1000 * 67,
+                Millisecond {
+                    years: 0,
+                    days: 0,
+                    hours: 0,
+                    minutes: 1,
+                    seconds: 7,
+                    millis: 0,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                1000 * 60 * 5,
+                Millisecond {
+                    years: 0,
+                    days: 0,
+                    hours: 0,
+                    minutes: 5,
+                    seconds: 0,
+                    millis: 0,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                1000 * 60 * 67,
+                Millisecond {
+                    years: 0,
+                    days: 0,
+                    hours: 1,
+                    minutes: 7,
+                    seconds: 0,
+                    millis: 0,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                1000 * 60 * 60 * 12,
+                Millisecond {
+                    years: 0,
+                    days: 0,
+                    hours: 12,
+                    minutes: 0,
+                    seconds: 0,
+                    millis: 0,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                1000 * 60 * 60 * 40,
+                Millisecond {
+                    years: 0,
+                    days: 1,
+                    hours: 16,
+                    minutes: 0,
+                    seconds: 0,
+                    millis: 0,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                1000 * 60 * 60 * 999,
+                Millisecond {
+                    years: 0,
+                    days: 41,
+                    hours: 15,
+                    minutes: 0,
+                    seconds: 0,
+                    millis: 0,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                1000 * 60 * 60 * 24 * 465,
+                Millisecond {
+                    years: 1,
+                    days: 100,
+                    hours: 0,
+                    minutes: 0,
+                    seconds: 0,
+                    millis: 0,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                1000 * 60 * 67 * 24 * 465,
+                Millisecond {
+                    years: 1,
+                    days: 154,
+                    hours: 6,
+                    minutes: 0,
+                    seconds: 0,
+                    millis: 0,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                119_999,
+                Millisecond {
+                    years: 0,
+                    days: 0,
+                    hours: 0,
+                    minutes: 1,
+                    seconds: 59,
+                    millis: 999,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                120_000,
+                Millisecond {
+                    years: 0,
+                    days: 0,
+                    hours: 0,
+                    minutes: 2,
+                    seconds: 0,
+                    millis: 0,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                9007199254740991,
+                Millisecond {
+                    years: 285616,
+                    days: 151,
+                    hours: 8,
+                    minutes: 59,
+                    seconds: 0,
+                    millis: 991,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ), // "285616y 151d 8h 59m 0.9s"
+            (
+                u64::MAX as u128,
+                Millisecond {
+                    years: 584942417,
+                    days: 129,
+                    hours: 14,
+                    minutes: 25,
+                    seconds: 51,
+                    millis: 615,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
+            (
+                u128::MAX,
+                Millisecond {
+                    years: 360324529090,
+                    days: 264,
+                    hours: 9,
+                    minutes: 29,
+                    seconds: 55,
+                    millis: 455,
+                    micros: 0,
+                    nanos: 0,
+                },
+            ),
         ];
         for (k, v) in cases {
             assert_eq!(Millisecond::from_millis(k), v, "from_millis ({k})");
@@ -493,154 +549,190 @@ mod tests {
     #[test]
     fn should_split_from_micros() {
         let x = Millisecond::from_micros(1);
-        assert_eq!(x, Millisecond {
-            years: 0,
-            days: 0,
-            hours: 0,
-            minutes: 0,
-            seconds: 0,
-            millis: 0,
-            micros: 1,
-            nanos: 0,
-        });
+        assert_eq!(
+            x,
+            Millisecond {
+                years: 0,
+                days: 0,
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+                millis: 0,
+                micros: 1,
+                nanos: 0,
+            }
+        );
         let x = Millisecond::from_micros(1_800);
-        assert_eq!(x, Millisecond {
-            years: 0,
-            days: 0,
-            hours: 0,
-            minutes: 0,
-            seconds: 0,
-            millis: 1,
-            micros: 800,
-            nanos: 0,
-        });
+        assert_eq!(
+            x,
+            Millisecond {
+                years: 0,
+                days: 0,
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+                millis: 1,
+                micros: 800,
+                nanos: 0,
+            }
+        );
     }
     #[test]
     fn should_split_from_nanos() {
         let x = Millisecond::from_nanos(1);
-        assert_eq!(x, Millisecond {
-            years: 0,
-            days: 0,
-            hours: 0,
-            minutes: 0,
-            seconds: 0,
-            millis: 0,
-            micros: 0,
-            nanos: 1,
-        });
+        assert_eq!(
+            x,
+            Millisecond {
+                years: 0,
+                days: 0,
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 1,
+            }
+        );
         let x = Millisecond::from_nanos(1_800);
-        assert_eq!(x, Millisecond {
-            years: 0,
-            days: 0,
-            hours: 0,
-            minutes: 0,
-            seconds: 0,
-            millis: 0,
-            micros: 1,
-            nanos: 800,
-        });
+        assert_eq!(
+            x,
+            Millisecond {
+                years: 0,
+                days: 0,
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+                millis: 0,
+                micros: 1,
+                nanos: 800,
+            }
+        );
     }
     #[test]
     fn should_split_from_secs() {
         let x = Millisecond::from_secs(1);
-        assert_eq!(x, Millisecond {
-            years: 0,
-            days: 0,
-            hours: 0,
-            minutes: 0,
-            seconds: 1,
-            millis: 0,
-            micros: 0,
-            nanos: 0,
-        });
+        assert_eq!(
+            x,
+            Millisecond {
+                years: 0,
+                days: 0,
+                hours: 0,
+                minutes: 0,
+                seconds: 1,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
+            }
+        );
     }
     #[test]
     fn should_split_from_minutes() {
         let x = Millisecond::from_minutes(1);
-        assert_eq!(x, Millisecond {
-            years: 0,
-            days: 0,
-            hours: 0,
-            minutes: 1,
-            seconds: 0,
-            millis: 0,
-            micros: 0,
-            nanos: 0,
-        });
+        assert_eq!(
+            x,
+            Millisecond {
+                years: 0,
+                days: 0,
+                hours: 0,
+                minutes: 1,
+                seconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
+            }
+        );
         let x = Millisecond::from_minutes(61);
-        assert_eq!(x, Millisecond {
-            years: 0,
-            days: 0,
-            hours: 1,
-            minutes: 1,
-            seconds: 0,
-            millis: 0,
-            micros: 0,
-            nanos: 0,
-        });
+        assert_eq!(
+            x,
+            Millisecond {
+                years: 0,
+                days: 0,
+                hours: 1,
+                minutes: 1,
+                seconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
+            }
+        );
     }
     #[test]
     fn should_split_from_hours() {
         let x = Millisecond::from_hours(1);
-        assert_eq!(x, Millisecond {
-            years: 0,
-            days: 0,
-            hours: 1,
-            minutes: 0,
-            seconds: 0,
-            millis: 0,
-            micros: 0,
-            nanos: 0,
-        });
+        assert_eq!(
+            x,
+            Millisecond {
+                years: 0,
+                days: 0,
+                hours: 1,
+                minutes: 0,
+                seconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
+            }
+        );
         let x = Millisecond::from_hours(25);
-        assert_eq!(x, Millisecond {
-            years: 0,
-            days: 1,
-            hours: 1,
-            minutes: 0,
-            seconds: 0,
-            millis: 0,
-            micros: 0,
-            nanos: 0,
-        });
+        assert_eq!(
+            x,
+            Millisecond {
+                years: 0,
+                days: 1,
+                hours: 1,
+                minutes: 0,
+                seconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
+            }
+        );
     }
     #[test]
     fn should_split_from_days() {
         let x = Millisecond::from_days(1);
-        assert_eq!(x, Millisecond {
-            years: 0,
-            days: 1,
-            hours: 0,
-            minutes: 0,
-            seconds: 0,
-            millis: 0,
-            micros: 0,
-            nanos: 0,
-        });
+        assert_eq!(
+            x,
+            Millisecond {
+                years: 0,
+                days: 1,
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
+            }
+        );
         let x = Millisecond::from_days(366);
-        assert_eq!(x, Millisecond {
-            years: 1,
-            days: 1,
-            hours: 0,
-            minutes: 0,
-            seconds: 0,
-            millis: 0,
-            micros: 0,
-            nanos: 0,
-        });
+        assert_eq!(
+            x,
+            Millisecond {
+                years: 1,
+                days: 1,
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
+            }
+        );
     }
     #[test]
     fn should_split_from_years() {
         let x = Millisecond::from_years(1);
-        assert_eq!(x, Millisecond {
-            years: 1,
-            days: 0,
-            hours: 0,
-            minutes: 0,
-            seconds: 0,
-            millis: 0,
-            micros: 0,
-            nanos: 0,
-        });
+        assert_eq!(
+            x,
+            Millisecond {
+                years: 1,
+                days: 0,
+                hours: 0,
+                minutes: 0,
+                seconds: 0,
+                millis: 0,
+                micros: 0,
+                nanos: 0,
+            }
+        );
     }
 }
