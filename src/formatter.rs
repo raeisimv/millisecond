@@ -1,6 +1,6 @@
-use alloc::{format, vec};
 use alloc::string::String;
 use alloc::vec::Vec;
+use alloc::{format, vec};
 use core::fmt::{Display, Formatter};
 
 use crate::Millisecond;
