@@ -1,3 +1,6 @@
+use alloc::{format, vec};
+use alloc::string::String;
+use alloc::vec::Vec;
 use core::fmt::{Display, Formatter};
 
 use crate::Millisecond;
@@ -88,7 +91,7 @@ impl MillisecondPart {
 }
 
 impl Display for MillisecondPart {
-    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
         write!(f, "{}", self.to_short_string())
     }
 }
