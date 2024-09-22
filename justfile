@@ -7,6 +7,7 @@ test:
     cargo fmt --all -- --emit=files
     cargo build
     cargo test --no-fail-fast
+    cargo test --package millisecond --doc --no-fail-fast
 
 build:
     just test
