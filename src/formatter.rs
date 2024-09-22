@@ -1,11 +1,8 @@
+use alloc::format;
 use alloc::string::String;
-use alloc::vec::Vec;
-use alloc::{format, vec};
 use core::fmt::{Display, Formatter};
 
-use crate::Millisecond;
-
-#[derive(Debug)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum MillisecondPart {
     Years(u64),
     Days(u16),
@@ -46,47 +43,6 @@ impl MillisecondPart {
             MillisecondPart::Micros(x) => with_pluralization(x, "microsecond", 1),
             MillisecondPart::Nanos(x) => with_pluralization(x, "nanosecond", 1),
         }
-    }
-    pub fn from_millisecond(ms: &Millisecond) -> Vec<MillisecondPart> {
-        Self::from_millisecond_with_option(ms, true)
-    }
-    pub fn from_millisecond_with_option(
-        ms: &Millisecond,
-        merge_secs_and_millis: bool,
-    ) -> Vec<MillisecondPart> {
-        let mut v = vec![];
-        if ms.years > 0 {
-            v.push(MillisecondPart::Years(ms.years));
-        }
-        if ms.days > 0 {
-            v.push(MillisecondPart::Days(ms.days));
-        }
-        if ms.hours > 0 {
-            v.push(MillisecondPart::Hours(ms.hours));
-        }
-        if ms.minutes > 0 {
-            v.push(MillisecondPart::Minutes(ms.minutes));
-        }
-
-        if ms.seconds > 0 {
-            if merge_secs_and_millis && ms.millis > 0 {
-                v.push(MillisecondPart::SecsAndMillis(ms.seconds, ms.millis));
-            } else {
-                v.push(MillisecondPart::Seconds(ms.seconds));
-            }
-        }
-        if !merge_secs_and_millis && ms.millis > 0 {
-            v.push(MillisecondPart::Millis(ms.millis));
-        }
-
-        if ms.micros > 0 {
-            v.push(MillisecondPart::Micros(ms.micros));
-        }
-        if ms.nanos > 0 {
-            v.push(MillisecondPart::Nanos(ms.nanos));
-        }
-
-        v
     }
 }
 
