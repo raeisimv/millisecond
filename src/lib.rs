@@ -9,7 +9,7 @@
 #![no_std]
 extern crate alloc;
 
-pub use formatter::MillisecondPart;
+pub use formatter::*;
 pub use splitter::Millisecond;
 
 mod formatter;

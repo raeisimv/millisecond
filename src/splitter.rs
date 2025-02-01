@@ -1,8 +1,6 @@
-use alloc::string::String;
-use alloc::vec::Vec;
 use core::fmt::{Display, Formatter};
 
-use crate::formatter::MillisecondPart;
+use crate::formatter::*;
 
 /// The input value, specified in milliseconds, is parsed and decomposed into constituent
 /// components such as years, days, and seconds. These components can subsequently be utilized
@@ -10,7 +8,7 @@ use crate::formatter::MillisecondPart;
 /// integration into your specific calculations.
 /// ## Example
 /// ```rust
-/// use crate::millisecond::Millisecond;
+/// use crate::millisecond::*;
 ///
 /// let ms = Millisecond::from_millis(33023448000);
 ///
@@ -237,22 +235,6 @@ impl Millisecond {
     }
 }
 
-impl Millisecond {
-    pub fn to_short_string(&self) -> String {
-        MillisecondPart::from_millisecond(self)
-            .iter()
-            .map(|x| x.to_short_string())
-            .collect::<Vec<String>>()
-            .join(" ")
-    }
-    pub fn to_long_string(&self) -> String {
-        MillisecondPart::from_millisecond(self)
-            .iter()
-            .map(|x| x.to_long_string())
-            .collect::<Vec<String>>()
-            .join(" ")
-    }
-}
 impl Display for Millisecond {
     fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
         write!(f, "{}", self.to_short_string())
