@@ -1,29 +1,26 @@
-use alloc::string::String;
+use alloc::{format, string::String, vec::Vec};
 use core::time::Duration;
 
 pub trait MillisecondFormatter {
     type Output;
+
     fn to_string_with(&self, opt: &MillisecondOption) -> Self::Output;
-    fn to_short_string(&self) -> Self::Output;
-    fn to_long_string(&self) -> Self::Output;
-}
-
-impl MillisecondFormatter for Duration {
-    type Output = String;
-
-    fn to_string_with(&self, opt: &MillisecondOption) -> Self::Output {
-        duration_to_string(self, opt)
-    }
 
     fn to_short_string(&self) -> Self::Output {
         self.to_string_with(&MillisecondOption::default())
     }
 
     fn to_long_string(&self) -> Self::Output {
-        self.to_string_with(&MillisecondOption {
-            long: true,
-            ..MillisecondOption::default()
-        })
+        self.to_string_with(&MillisecondOption::long())
+    }
+}
+
+impl MillisecondFormatter for Duration {
+    type Output = String;
+
+    fn to_string_with(&self, opt: &MillisecondOption) -> Self::Output {
+        let parts = parse_duration(self, opt);
+        ms_parts_to_string(&parts, opt)
     }
 }
 
@@ -31,6 +28,14 @@ impl MillisecondFormatter for Duration {
 pub struct MillisecondOption {
     pub long: bool,
     pub days_instead_of_years: bool,
+}
+impl MillisecondOption {
+    pub fn long() -> Self {
+        Self {
+            long: true,
+            ..Default::default()
+        }
+    }
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
@@ -43,116 +48,6 @@ pub enum MillisecondPart {
     Millis(u16),
     Micros(u16),
     Nanos(u16),
-}
-
-impl MillisecondPart {
-    pub fn get_label(&self, long: bool, plural: bool) -> &'static str {
-        match self {
-            MillisecondPart::Years(x) => {
-                if long {
-                    if plural {
-                        "years"
-                    } else {
-                        "year"
-                    }
-                } else {
-                    "y"
-                }
-            }
-            MillisecondPart::Days(x) => {
-                if long {
-                    if plural {
-                        "days"
-                    } else {
-                        "day"
-                    }
-                } else {
-                    "d"
-                }
-            }
-            MillisecondPart::Hours(x) => {
-                if long {
-                    if plural {
-                        "hours"
-                    } else {
-                        "hour"
-                    }
-                } else {
-                    "h"
-                }
-            }
-            MillisecondPart::Minutes(x) => {
-                if long {
-                    if plural {
-                        "minutes"
-                    } else {
-                        "minute"
-                    }
-                } else {
-                    "m"
-                }
-            }
-            MillisecondPart::Seconds(x) => {
-                if long {
-                    if plural {
-                        "seconds"
-                    } else {
-                        "second"
-                    }
-                } else {
-                    "s"
-                }
-            }
-            MillisecondPart::Millis(x) => {
-                if long {
-                    if plural {
-                        "milliseconds"
-                    } else {
-                        "millisecond"
-                    }
-                } else {
-                    "ms"
-                }
-            }
-            MillisecondPart::Micros(x) => {
-                if long {
-                    if plural {
-                        "microseconds"
-                    } else {
-                        "microsecond"
-                    }
-                } else {
-                    "µs"
-                }
-            }
-            MillisecondPart::Nanos(x) => {
-                if long {
-                    if plural {
-                        "nanoseconds"
-                    } else {
-                        "nanosecond"
-                    }
-                } else {
-                    "ns"
-                }
-            }
-        }
-    }
-}
-
-pub fn duration_to_string(dur: &Duration, opt: &MillisecondOption) -> String {
-    let parts = parse_duration(dur, opt);
-
-    parts
-        .iter()
-        .filter_map(|x| {
-            if let Some(x) = x {
-                Some(x.get_label(opt.long, false))
-            } else {
-                None
-            }
-        })
-        .collect()
 }
 
 pub fn parse_duration(dur: &Duration, opt: &MillisecondOption) -> [Option<MillisecondPart>; 8] {
@@ -220,6 +115,115 @@ pub fn parse_duration(dur: &Duration, opt: &MillisecondOption) -> [Option<Millis
     }
 
     parts
+}
+
+impl MillisecondPart {
+    pub fn get_label(&self, long: bool) -> String {
+        match self {
+            MillisecondPart::Years(x) => {
+                if long {
+                    if *x != 1 {
+                        format!("{x} years")
+                    } else {
+                        format!("{x} year")
+                    }
+                } else {
+                    format!("{x}y")
+                }
+            }
+            MillisecondPart::Days(x) => {
+                if long {
+                    if *x != 1 {
+                        format!("{x} days")
+                    } else {
+                        format!("{x} day")
+                    }
+                } else {
+                    format!("{x}d")
+                }
+            }
+            MillisecondPart::Hours(x) => {
+                if long {
+                    if *x != 1 {
+                        format!("{x} hours")
+                    } else {
+                        format!("{x} hour")
+                    }
+                } else {
+                    format!("{x}h")
+                }
+            }
+            MillisecondPart::Minutes(x) => {
+                if long {
+                    if *x != 1 {
+                        format!("{x} minutes")
+                    } else {
+                        format!("{x} minute")
+                    }
+                } else {
+                    format!("{x}m")
+                }
+            }
+            MillisecondPart::Seconds(x) => {
+                if long {
+                    if *x != 1 {
+                        format!("{x} seconds")
+                    } else {
+                        format!("{x} second")
+                    }
+                } else {
+                    format!("{x}s")
+                }
+            }
+            MillisecondPart::Millis(x) => {
+                if long {
+                    if *x != 1 {
+                        format!("{x} milliseconds")
+                    } else {
+                        format!("{x} millisecond")
+                    }
+                } else {
+                    format!("{x}ms")
+                }
+            }
+            MillisecondPart::Micros(x) => {
+                if long {
+                    if *x != 1 {
+                        format!("{x} microseconds")
+                    } else {
+                        format!("{x} microsecond")
+                    }
+                } else {
+                    format!("{x}µs")
+                }
+            }
+            MillisecondPart::Nanos(x) => {
+                if long {
+                    if *x != 1 {
+                        format!("{x} nanoseconds")
+                    } else {
+                        format!("{x} nanosecond")
+                    }
+                } else {
+                    format!("{x}ns")
+                }
+            }
+        }
+    }
+}
+
+pub fn ms_parts_to_string(parts: &[Option<MillisecondPart>; 8], opt: &MillisecondOption) -> String {
+    parts
+        .iter()
+        .filter_map(|x| {
+            if let Some(x) = x {
+                Some(x.get_label(opt.long))
+            } else {
+                None
+            }
+        })
+        .collect::<Vec<_>>()
+        .join(" ")
 }
 
 #[cfg(test)]
@@ -456,6 +460,75 @@ mod tests {
         for (dur, exp) in cases.iter() {
             let parts = parse_duration(&dur, &MillisecondOption::default());
             assert_eq!(parts, *exp);
+        }
+    }
+    #[test]
+    fn should_convert_to_string() {
+        let test_cases = [
+            (
+                [
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                ],
+                "",
+                ""
+            ),
+            (
+                [
+                    Some(MillisecondPart::Years(1)),
+                    Some(MillisecondPart::Days(1)),
+                    Some(MillisecondPart::Hours(1)),
+                    Some(MillisecondPart::Minutes(1)),
+                    Some(MillisecondPart::Seconds(1)),
+                    Some(MillisecondPart::Millis(1)),
+                    Some(MillisecondPart::Micros(1)),
+                    Some(MillisecondPart::Nanos(1)),
+                ],
+                "1y 1d 1h 1m 1s 1ms 1µs 1ns",
+                "1 year 1 day 1 hour 1 minute 1 second 1 millisecond 1 microsecond 1 nanosecond",
+            ),
+            (
+                [
+                    Some(MillisecondPart::Years(2)),
+                    Some(MillisecondPart::Days(3)),
+                    Some(MillisecondPart::Hours(23)),
+                    Some(MillisecondPart::Minutes(34)),
+                    Some(MillisecondPart::Seconds(35)),
+                    Some(MillisecondPart::Millis(360)),
+                    Some(MillisecondPart::Micros(370)),
+                    Some(MillisecondPart::Nanos(380)),
+                ],
+                "2y 3d 23h 34m 35s 360ms 370µs 380ns",
+                "2 years 3 days 23 hours 34 minutes 35 seconds 360 milliseconds 370 microseconds 380 nanoseconds",
+            ),
+            (
+                [
+                    Some(MillisecondPart::Years(1)),
+                    Some(MillisecondPart::Days(2)),
+                    None,
+                    Some(MillisecondPart::Minutes(3)),
+                    None,
+                    None,
+                    None,
+                    None,
+                ],
+                "1y 2d 3m",
+                "1 year 2 days 3 minutes",
+            ),
+        ];
+
+        for (test, exp_short, exp_long) in test_cases.iter() {
+            let act = ms_parts_to_string(&test, &MillisecondOption::default());
+            assert_eq!(act, *exp_short);
+
+            let act = ms_parts_to_string(&test, &MillisecondOption::long());
+            assert_eq!(act, *exp_long);
         }
     }
 }

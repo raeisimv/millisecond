@@ -124,8 +124,16 @@ mod tests {
         for (actual, expected) in cases {
             let sec_res = parse_secs(actual);
             let min_res = parse_mins(actual);
-            assert_eq!(sec_res, expected, "Seconds -> Expected:{:?} Got:{:?}", expected, sec_res);
-            assert_eq!(min_res, expected, "Minutes -> Expected:{:?} Got:{:?}", expected, min_res);
+            assert_eq!(
+                sec_res, expected,
+                "Seconds -> Expected:{:?} Got:{:?}",
+                expected, sec_res
+            );
+            assert_eq!(
+                min_res, expected,
+                "Minutes -> Expected:{:?} Got:{:?}",
+                expected, min_res
+            );
         }
     }
 
@@ -161,7 +169,13 @@ mod tests {
         let cases = vec![
             (0, ParsedUnitValue { unit: 0, total: 0 }),
             (1, ParsedUnitValue { unit: 1, total: 0 }),
-            (364, ParsedUnitValue { unit: 364, total: 0 }),
+            (
+                364,
+                ParsedUnitValue {
+                    unit: 364,
+                    total: 0,
+                },
+            ),
             (365, ParsedUnitValue { unit: 0, total: 1 }),
             (366, ParsedUnitValue { unit: 1, total: 1 }),
         ];
