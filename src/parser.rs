@@ -215,13 +215,8 @@ impl MillisecondPart {
 pub fn ms_parts_to_string(parts: &[Option<MillisecondPart>; 8], opt: &MillisecondOption) -> String {
     parts
         .iter()
-        .filter_map(|x| {
-            if let Some(x) = x {
-                Some(x.get_label(opt.long))
-            } else {
-                None
-            }
-        })
+        .filter(|x| x.is_some())
+        .map(|x| x.unwrap().get_label(opt.long))
         .collect::<Vec<_>>()
         .join(" ")
 }
@@ -292,7 +287,7 @@ mod tests {
         ];
 
         for (dur, exp) in cases.iter() {
-            let parts = parse_duration(&dur, &MillisecondOption::default());
+            let parts = parse_duration(dur, &MillisecondOption::default());
             assert_eq!(parts, *exp);
         }
     }
@@ -458,7 +453,7 @@ mod tests {
         ];
 
         for (dur, exp) in cases.iter() {
-            let parts = parse_duration(&dur, &MillisecondOption::default());
+            let parts = parse_duration(dur, &MillisecondOption::default());
             assert_eq!(parts, *exp);
         }
     }
@@ -524,10 +519,10 @@ mod tests {
         ];
 
         for (test, exp_short, exp_long) in test_cases.iter() {
-            let act = ms_parts_to_string(&test, &MillisecondOption::default());
+            let act = ms_parts_to_string(test, &MillisecondOption::default());
             assert_eq!(act, *exp_short);
 
-            let act = ms_parts_to_string(&test, &MillisecondOption::long());
+            let act = ms_parts_to_string(test, &MillisecondOption::long());
             assert_eq!(act, *exp_long);
         }
     }
