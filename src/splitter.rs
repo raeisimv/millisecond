@@ -22,10 +22,10 @@ use crate::MillisecondFormatter;
 /// print!("short: {ms}");
 /// // short: 1y 17d 5h 10m 48s
 ///
-/// print!("short: {}", ms.to_short_string());
+/// print!("short: {}", ms.pretty());
 /// // short: 1y 17d 5h 10m 48s
 ///
-/// print!("long: {}", ms.to_long_string());
+/// print!("long: {}", ms.pretty_with(&MillisecondOption::long()));
 /// // long: 1 year 17 days 5 hours 10 minutes 48 seconds
 /// ```
 ///
@@ -66,10 +66,10 @@ impl Millisecond {
     /// Creates a Millisecond instance using the provided nanoseconds.
     /// ### Example
     /// ```rust
-    /// use millisecond::Millisecond;
+    /// use millisecond::*;
     /// let ms = Millisecond::from_nanos(1_800);
     ///
-    /// assert_eq!(ms.to_string(), "1µs 800ns")
+    /// assert_eq!(ms.pretty(), "1µs 800ns")
     /// ```
     pub fn from_nanos(nanos: u64) -> Self {
         Duration::from_nanos(nanos).into()
@@ -78,10 +78,10 @@ impl Millisecond {
     /// Creates a Millisecond instance using the provided microseconds.
     /// ### Example
     /// ```rust
-    /// use millisecond::Millisecond;
+    /// use millisecond::*;
     /// let ms = Millisecond::from_micros(1_800);
     ///
-    /// assert_eq!(ms.to_string(), "1ms 800µs")
+    /// assert_eq!(ms.pretty(), "1ms 800µs")
     /// ```
     pub fn from_micros(micros: u64) -> Self {
         Duration::from_micros(micros).into()
@@ -90,10 +90,10 @@ impl Millisecond {
     /// Creates a Millisecond instance using the provided milliseconds.
     /// ### Example
     /// ```rust
-    /// use millisecond::Millisecond;
+    /// use millisecond::*;
     /// let ms = Millisecond::from_millis(1_800);
     ///
-    /// assert_eq!(ms.to_string(), "1s 800ms")
+    /// assert_eq!(ms.pretty(), "1s 800ms")
     /// ```
     pub fn from_millis(millis: u64) -> Self {
         Duration::from_millis(millis).into()
@@ -102,10 +102,10 @@ impl Millisecond {
     /// Creates a Millisecond instance using the provided seconds.
     /// ### Example
     /// ```rust
-    /// use millisecond::Millisecond;
+    /// use millisecond::*;
     /// let ms = Millisecond::from_secs(61);
     ///
-    /// assert_eq!(ms.to_string(), "1m 1s")
+    /// assert_eq!(ms.pretty(), "1m 1s")
     /// ```
     pub fn from_secs(secs: u64) -> Self {
         Duration::from_secs(secs).into()
@@ -114,10 +114,10 @@ impl Millisecond {
     /// Creates a Millisecond instance using the provided minutes.
     /// ### Example
     /// ```rust
-    /// use millisecond::Millisecond;
+    /// use millisecond::*;
     /// let ms = Millisecond::from_minutes(61);
     ///
-    /// assert_eq!(ms.to_string(), "1h 1m")
+    /// assert_eq!(ms.pretty(), "1h 1m")
     /// ```
     pub fn from_minutes(minutes: u32) -> Self {
         Duration::from_secs(minutes as u64 * 60).into()
@@ -126,10 +126,10 @@ impl Millisecond {
     /// Creates a Millisecond instance using the provided hours.
     /// ### Example
     /// ```rust
-    /// use millisecond::Millisecond;
+    /// use millisecond::*;
     /// let ms = Millisecond::from_hours(25);
     ///
-    /// assert_eq!(ms.to_string(), "1d 1h")
+    /// assert_eq!(ms.pretty(), "1d 1h")
     /// ```
     pub fn from_hours(hours: u32) -> Self {
         Self::from_secs(hours as u64 * 60 * 60)
@@ -138,10 +138,10 @@ impl Millisecond {
     /// Creates a Millisecond instance using the provided days.
     /// ### Example
     /// ```rust
-    /// use millisecond::Millisecond;
+    /// use millisecond::*;
     /// let ms = Millisecond::from_days(366);
     ///
-    /// assert_eq!(ms.to_string(), "1y 1d")
+    /// assert_eq!(ms.pretty(), "1y 1d")
     /// ```
     pub fn from_days(days: u32) -> Self {
         Self::from_hours(days * 24)
@@ -150,10 +150,10 @@ impl Millisecond {
     /// Creates a Millisecond instance using the provided years.
     /// ### Example
     /// ```rust
-    /// use millisecond::Millisecond;
+    /// use millisecond::*;
     /// let ms = Millisecond::from_years(1);
     ///
-    /// assert_eq!(ms.to_string(), "1y")
+    /// assert_eq!(ms.pretty(), "1y")
     /// ```
     pub fn from_years(years: u32) -> Self {
         Self::from_days(years * 365)
@@ -163,14 +163,14 @@ impl Millisecond {
 impl MillisecondFormatter for Millisecond {
     type Output = String;
 
-    fn to_string_with(&self, opt: &crate::MillisecondOption) -> Self::Output {
-        self.dur.to_string_with(opt)
+    fn pretty_with(&self, opt: &crate::MillisecondOption) -> Self::Output {
+        self.dur.pretty_with(opt)
     }
 }
 
 impl Display for Millisecond {
     fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
-        write!(f, "{}", self.to_short_string())
+        write!(f, "{}", self.pretty())
     }
 }
 
@@ -181,7 +181,7 @@ mod tests {
     #[test]
     fn should_split_from_millis_basic() {
         let x = Millisecond::from_millis(10_123);
-        assert_eq!(x.to_short_string(), "10s 123ms");
+        assert_eq!(x.pretty(), "10s 123ms");
     }
     #[test]
     fn should_split_from_millis() {
@@ -207,72 +207,60 @@ mod tests {
             (u64::MAX, "584942417y 129d 14h 25m 51s 615ms"),
         ];
         for (k, v) in cases {
-            assert_eq!(
-                Millisecond::from_millis(k).to_short_string(),
-                v,
-                "from_millis ({k})"
-            );
+            assert_eq!(Millisecond::from_millis(k).pretty(), v, "from_millis ({k})");
 
             if let Some(x) = k.checked_mul(1_000) {
-                assert_eq!(
-                    Millisecond::from_micros(x).to_short_string(),
-                    v,
-                    "from_micros ({k})"
-                );
+                assert_eq!(Millisecond::from_micros(x).pretty(), v, "from_micros ({k})");
             }
 
             if let Some(x) = k.checked_mul(1_000_000) {
-                assert_eq!(
-                    Millisecond::from_nanos(x).to_short_string(),
-                    v,
-                    "from_nanos ({k})"
-                );
+                assert_eq!(Millisecond::from_nanos(x).pretty(), v, "from_nanos ({k})");
             }
         }
     }
     #[test]
     fn should_split_from_micros() {
-        let x = Millisecond::from_micros(1).to_short_string();
+        let x = Millisecond::from_micros(1).pretty();
         assert_eq!(x, "1µs");
-        let x = Millisecond::from_micros(1_800).to_short_string();
+        let x = Millisecond::from_micros(1_800).pretty();
         assert_eq!(x, "1ms 800µs");
     }
     #[test]
     fn should_split_from_nanos() {
-        let x = Millisecond::from_nanos(1).to_short_string();
+        let x = Millisecond::from_nanos(1).pretty();
         assert_eq!(x, "1ns");
-        let x = Millisecond::from_nanos(1_800).to_short_string();
+        let x = Millisecond::from_nanos(1_800).pretty();
         assert_eq!(x, "1µs 800ns");
     }
     #[test]
     fn should_split_from_secs() {
-        let x = Millisecond::from_secs(1).to_short_string();
+        let x = Millisecond::from_secs(1).pretty();
         assert_eq!(x, "1s");
     }
     #[test]
     fn should_split_from_minutes() {
-        let x = Millisecond::from_minutes(1).to_short_string();
+        let x = Millisecond::from_minutes(1).pretty();
         assert_eq!(x, "1m");
-        let x = Millisecond::from_minutes(61).to_short_string();
+        let x = Millisecond::from_minutes(61).pretty();
         assert_eq!(x, "1h 1m");
     }
     #[test]
     fn should_split_from_hours() {
-        let x = Millisecond::from_hours(1).to_short_string();
+        let x = Millisecond::from_hours(1).pretty();
         assert_eq!(x, "1h");
-        let x = Millisecond::from_hours(25).to_short_string();
+        let x = Millisecond::from_hours(25).pretty();
         assert_eq!(x, "1d 1h");
     }
     #[test]
     fn should_split_from_days() {
-        let x = Millisecond::from_days(1).to_short_string();
+        let x = Millisecond::from_days(1).pretty();
         assert_eq!(x, "1d");
-        let x = Millisecond::from_days(366).to_short_string();
+        let x = Millisecond::from_days(366).pretty();
         assert_eq!(x, "1y 1d");
     }
     #[test]
     fn should_split_from_years() {
-        let x = Millisecond::from_years(1).to_short_string();
+        let x = Millisecond::from_years(1).pretty();
         assert_eq!(x, "1y");
     }
 }

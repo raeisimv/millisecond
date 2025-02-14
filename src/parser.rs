@@ -4,21 +4,27 @@ use core::time::Duration;
 pub trait MillisecondFormatter {
     type Output;
 
-    fn to_string_with(&self, opt: &MillisecondOption) -> Self::Output;
+    fn pretty_with(&self, opt: &MillisecondOption) -> Self::Output;
 
-    fn to_short_string(&self) -> Self::Output {
-        self.to_string_with(&MillisecondOption::default())
+    fn pretty(&self) -> Self::Output {
+        self.pretty_with(&MillisecondOption::default())
     }
 
+    #[deprecated(since = "0.4.0", note = "use the `pretty` function instead")]
+    fn to_short_string(&self) -> Self::Output {
+        self.pretty()
+    }
+
+    #[deprecated(since = "0.4.0", note = "use the `pretty_with` function instead")]
     fn to_long_string(&self) -> Self::Output {
-        self.to_string_with(&MillisecondOption::long())
+        self.pretty_with(&MillisecondOption::long())
     }
 }
 
 impl MillisecondFormatter for Duration {
     type Output = String;
 
-    fn to_string_with(&self, opt: &MillisecondOption) -> Self::Output {
+    fn pretty_with(&self, opt: &MillisecondOption) -> Self::Output {
         let parts = parse_duration(self, opt);
         ms_parts_to_string(&parts, opt)
     }
