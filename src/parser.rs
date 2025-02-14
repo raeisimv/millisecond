@@ -30,11 +30,18 @@ impl MillisecondFormatter for Duration {
     }
 }
 
+/// The options struct serves as a configuration mechanism for both parsing input and producing
+/// the final formatted output. It allows you to customize the behavior and settings used during
+/// these processes to tailor the results according to your specific requirements.
 #[derive(Debug, Clone, Default)]
 pub struct MillisecondOption {
+    /// When enabled, uses full and descriptive labels for time units, such as `years` instead of abbreviated forms like `y`.
     pub long: bool,
+
+    /// When activated, displays time durations in days rather than converting them into years.
     pub days_instead_of_years: bool,
 }
+
 impl MillisecondOption {
     pub fn long() -> Self {
         Self {
@@ -530,6 +537,24 @@ mod tests {
 
             let act = ms_parts_to_string(test, &MillisecondOption::long());
             assert_eq!(act, *exp_long);
+        }
+    }
+    #[test]
+    fn should_optin_days_instead_of_years() {
+        let test_cases = [
+            (Duration::from_secs((365 + 1) * 24 * 60 * 60), "366d"),
+            (Duration::from_secs(2 * 24 * 60 * 60), "2d"),
+            (Duration::from_secs(23 * 60 * 60), "23h"),
+        ];
+
+        for (test, exp) in test_cases.iter() {
+            let opt = MillisecondOption {
+                days_instead_of_years: true,
+                ..MillisecondOption::default()
+            };
+
+            let act = ms_parts_to_string(&parse_duration(test, &opt), &opt);
+            assert_eq!(&act, exp);
         }
     }
 }
