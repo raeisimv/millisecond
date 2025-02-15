@@ -10,31 +10,26 @@ $ cargo add millisecond
 
 ### Example
 ```rust
-use millisecond::Millisecond;
+use millisecond::prelude::*;
 
 fn main() {
-    let ms = Millisecond::from_millis(33023448000);
+    let ms = Millisecond::from_millis(33_023_448_000);
 
-    print!("display: {ms}");
+    println!("display: {ms}");
     // display: 1y 17d 5h 10m 48s
 
-    print!("short: {}", ms.to_short_string());
-    // short: 1y 17d 5h 10m 48s
+    println!("pretty: {}", ms.pretty());
+    // pretty: 1y 17d 5h 10m 48s
 
-    print!("long: {}", ms.to_long_string());
-    // long: 1 year 17 days 5 hours 10 minutes 48 seconds
+    println!("pretty_with: {}", ms.pretty_with(&MillisecondOption::long()));
+    // pretty_with: 1 year 17 days 5 hours 10 minutes 48 seconds
 
-    assert_eq!(ms, Millisecond {
-        years: 1,
-        days: 17,
-        hours: 5,
-        minutes: 10,
-        seconds: 48,
-        millis: 0,
-        micros: 0,
-        nanos: 0,
-    });
+    // Also works on Duration instance directly
+    let dur = core::time::Duration::from_millis(33_023_448_000);
+    println!("dur: {}", dur.pretty());
+    // dur: 1y 17d 5h 10m 48s
 }
+
 ```
 
 ### License
