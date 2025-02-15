@@ -158,14 +158,6 @@ impl Millisecond {
     pub fn from_years(years: u32) -> Self {
         Self::from_days(years * 365)
     }
-
-    pub fn pretty(&self) -> String {
-        self.dur.pretty()
-    }
-
-    pub fn pretty_with(&self, opt: &crate::parser::MillisecondOption) -> String {
-        self.dur.pretty_with(opt)
-    }
 }
 
 impl MillisecondFormatter for Millisecond {
