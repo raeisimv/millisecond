@@ -9,9 +9,11 @@
 #![no_std]
 extern crate alloc;
 
-pub use parser::*;
+pub use parser::MillisecondFormatter;
+pub use parser::MillisecondOption;
 pub use splitter::Millisecond;
 
-mod parser;
-mod splitter;
+pub mod parser;
+pub mod prelude;
+pub mod splitter;
 pub mod utils;

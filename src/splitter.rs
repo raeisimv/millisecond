@@ -6,7 +6,7 @@ use core::{
 
 use alloc::string::String;
 
-use crate::MillisecondFormatter;
+use crate::parser::MillisecondFormatter;
 
 /// The input value, specified in milliseconds, is parsed and decomposed into constituent
 /// components such as years, days, and seconds. These components can subsequently be utilized
@@ -15,7 +15,7 @@ use crate::MillisecondFormatter;
 ///
 /// ## Example
 /// ```rust
-/// use crate::millisecond::*;
+/// use crate::millisecond::prelude::*;
 ///
 /// let ms = Millisecond::from_millis(33023448000);
 ///
@@ -33,7 +33,7 @@ use crate::MillisecondFormatter;
 /// This struct implements `From` and `Deref` from/to `core::time::Duration`.
 ///
 /// ```rust
-/// use crate::millisecond::*;
+/// use crate::millisecond::prelude::*;
 /// use core::time::Duration;
 ///
 /// // convert into:
@@ -66,7 +66,7 @@ impl Millisecond {
     /// Creates a Millisecond instance using the provided nanoseconds.
     /// ### Example
     /// ```rust
-    /// use millisecond::*;
+    /// use millisecond::prelude::*;
     /// let ms = Millisecond::from_nanos(1_800);
     ///
     /// assert_eq!(ms.pretty(), "1µs 800ns")
@@ -78,7 +78,7 @@ impl Millisecond {
     /// Creates a Millisecond instance using the provided microseconds.
     /// ### Example
     /// ```rust
-    /// use millisecond::*;
+    /// use millisecond::prelude::*;
     /// let ms = Millisecond::from_micros(1_800);
     ///
     /// assert_eq!(ms.pretty(), "1ms 800µs")
@@ -90,7 +90,7 @@ impl Millisecond {
     /// Creates a Millisecond instance using the provided milliseconds.
     /// ### Example
     /// ```rust
-    /// use millisecond::*;
+    /// use millisecond::prelude::*;
     /// let ms = Millisecond::from_millis(1_800);
     ///
     /// assert_eq!(ms.pretty(), "1s 800ms")
@@ -102,7 +102,7 @@ impl Millisecond {
     /// Creates a Millisecond instance using the provided seconds.
     /// ### Example
     /// ```rust
-    /// use millisecond::*;
+    /// use millisecond::prelude::*;
     /// let ms = Millisecond::from_secs(61);
     ///
     /// assert_eq!(ms.pretty(), "1m 1s")
@@ -114,7 +114,7 @@ impl Millisecond {
     /// Creates a Millisecond instance using the provided minutes.
     /// ### Example
     /// ```rust
-    /// use millisecond::*;
+    /// use millisecond::prelude::*;
     /// let ms = Millisecond::from_minutes(61);
     ///
     /// assert_eq!(ms.pretty(), "1h 1m")
@@ -126,7 +126,7 @@ impl Millisecond {
     /// Creates a Millisecond instance using the provided hours.
     /// ### Example
     /// ```rust
-    /// use millisecond::*;
+    /// use millisecond::prelude::*;
     /// let ms = Millisecond::from_hours(25);
     ///
     /// assert_eq!(ms.pretty(), "1d 1h")
@@ -138,7 +138,7 @@ impl Millisecond {
     /// Creates a Millisecond instance using the provided days.
     /// ### Example
     /// ```rust
-    /// use millisecond::*;
+    /// use millisecond::prelude::*;
     /// let ms = Millisecond::from_days(366);
     ///
     /// assert_eq!(ms.pretty(), "1y 1d")
@@ -150,7 +150,7 @@ impl Millisecond {
     /// Creates a Millisecond instance using the provided years.
     /// ### Example
     /// ```rust
-    /// use millisecond::*;
+    /// use millisecond::prelude::*;
     /// let ms = Millisecond::from_years(1);
     ///
     /// assert_eq!(ms.pretty(), "1y")
@@ -163,7 +163,7 @@ impl Millisecond {
 impl MillisecondFormatter for Millisecond {
     type Output = String;
 
-    fn pretty_with(&self, opt: &crate::MillisecondOption) -> Self::Output {
+    fn pretty_with(&self, opt: &crate::parser::MillisecondOption) -> Self::Output {
         self.dur.pretty_with(opt)
     }
 }
