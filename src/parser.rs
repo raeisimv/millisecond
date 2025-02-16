@@ -40,6 +40,9 @@ pub struct MillisecondOption {
 
     /// When activated, displays time durations in days rather than converting them into years.
     pub days_instead_of_years: bool,
+
+    /// When activated, displays the most dominant part only (the most left part).
+    pub dominant_only: bool,
 }
 
 impl MillisecondOption {
@@ -226,9 +229,22 @@ impl MillisecondPart {
 }
 
 pub fn ms_parts_to_string(parts: &[Option<MillisecondPart>; 8], opt: &MillisecondOption) -> String {
+    let take = if opt.dominant_only {
+        1
+    } else {
+        8 // or infinity
+    };
     parts
         .iter()
+        .skip_while(|x| {
+            if opt.dominant_only {
+                x.is_none()
+            } else {
+                false
+            }
+        })
         .filter(|x| x.is_some())
+        .take(take)
         .map(|x| x.unwrap().get_label(opt.long))
         .collect::<Vec<_>>()
         .join(" ")
@@ -556,5 +572,46 @@ mod tests {
             let act = ms_parts_to_string(&parse_duration(test, &opt), &opt);
             assert_eq!(&act, exp);
         }
+    }
+    #[test]
+    fn should_display_dominant_part_only() {
+        #[allow(clippy::identity_op)]
+        let test_cases = [
+            (Duration::from_secs((365 + 0) * 24 * 60 * 60), "1y"),
+            (Duration::from_secs((365 + 1) * 24 * 60 * 60), "1y"),
+            (Duration::from_secs((24 + 0) * 60 * 60), "1d"),
+            (Duration::from_secs((24 + 1) * 60 * 60), "1d"),
+            (Duration::from_secs((60 + 0) * 60), "1h"),
+            (Duration::from_secs((60 + 1) * 60), "1h"),
+            (
+                Duration::from_secs((365 * 24 * 60 * 60) + (23 * 60 * 60)),
+                "1y",
+            ),
+            (Duration::from_millis(2_100), "2s"),
+            (Duration::from_millis(100), "100ms"),
+        ];
+
+        for (test, exp) in test_cases.iter() {
+            let opt = MillisecondOption {
+                dominant_only: true,
+                ..MillisecondOption::default()
+            };
+
+            let act = ms_parts_to_string(&parse_duration(test, &opt), &opt);
+            assert_eq!(&act, exp);
+        }
+
+        let opt = MillisecondOption {
+            dominant_only: true,
+            days_instead_of_years: true,
+            ..MillisecondOption::default()
+        };
+        assert_eq!(
+            "366d",
+            ms_parts_to_string(
+                &parse_duration(&Duration::from_secs((365 + 1) * 24 * 60 * 60), &opt),
+                &opt
+            )
+        );
     }
 }

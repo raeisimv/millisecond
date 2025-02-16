@@ -32,12 +32,15 @@ fn main() {
 ## Options
 Customize the parser and the output format using the `MillisecondOption` struct.
 
-| Option | Description |
-| :---: | :---: |
-| `long` | When enabled, uses full and descriptive labels for time units, such as `years` instead of abbreviated forms like `y`. |
-| `days_instead_of_years` | When activated, displays time durations in days rather than converting them into years. |
+| Option | Description | Example |
+| :--- | :--- | :--- |
+| `long` | uses full and descriptive labels for time units, such as `years` instead of abbreviated forms like `y`. | `2y` -> `2 years` |
+| `dominant_only` | displays the most dominant part only (the most left part). | `1y 2d` -> `1y` |
+| `days_instead_of_years` | displays time durations in days rather than converting them into years. | `1y 1d` -> `366d` |
 
-### Option creating shorthand
+*All options have deafult value unless specified*
+
+### Options shorthand
 In order to easily create a `MillisecondOption` instance, you can use the `MillisecondOption::default()` method:
 ```rust
 let option = MillisecondOption{
