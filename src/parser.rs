@@ -556,7 +556,7 @@ mod tests {
         }
     }
     #[test]
-    fn should_optin_days_instead_of_years() {
+    fn should_obtain_days_instead_of_years() {
         let test_cases = [
             (Duration::from_secs((365 + 1) * 24 * 60 * 60), "366d"),
             (Duration::from_secs(2 * 24 * 60 * 60), "2d"),
