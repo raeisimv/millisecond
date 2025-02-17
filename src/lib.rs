@@ -15,5 +15,6 @@ pub use splitter::Millisecond;
 
 pub mod parser;
 pub mod prelude;
+pub mod relative;
 pub mod splitter;
 pub mod utils;
