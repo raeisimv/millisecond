@@ -1,4 +1,5 @@
 use alloc::string::{String, ToString};
+use core::time::Duration;
 
 const SECONDS: &str = "less than a minute";
 const MINUTE: &str = "about a minute";
@@ -72,6 +73,12 @@ impl RelativePart {
         } else {
             label.into()
         }
+    }
+}
+
+impl From<Duration> for RelativePart {
+    fn from(value: Duration) -> Self {
+        Self::from_secs(value.as_secs())
     }
 }
 
@@ -215,5 +222,15 @@ mod tests {
             RelativePart::from_secs(315360000).get_label_string(),
             "10 years"
         );
+    }
+
+    #[test]
+    fn should_convert_from_duration() {
+        let dur = core::time::Duration::ZERO;
+        let rel: RelativePart = dur.into();
+        assert_eq!(rel.get_label_string(), "less than a minute");
+
+        let rel: RelativePart = core::time::Duration::from_secs(61).into();
+        assert_eq!(rel.get_label_string(), "about a minute");
     }
 }
