@@ -11,6 +11,7 @@ extern crate alloc;
 
 pub use parser::MillisecondFormatter;
 pub use parser::MillisecondOption;
+pub use relative::parser::RelativePart;
 pub use splitter::Millisecond;
 
 pub mod parser;
