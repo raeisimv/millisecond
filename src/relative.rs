@@ -1,17 +1,5 @@
 use alloc::string::{String, ToString};
 
-const SECONDS: &str = "less than a minute";
-const MINUTE: &str = "about a minute";
-const MINUTES: &str = "%d minutes";
-const HOUR: &str = "about an hour";
-const HOURS: &str = "about %d hours";
-const DAY: &str = "a day";
-const DAYS: &str = "%d days";
-const MONTH: &str = "about a month";
-const MONTHS: &str = "%d months";
-const YEAR: &str = "about a year";
-const YEARS: &str = "%d years";
-
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum RelativePart {
     FewSecs,
@@ -52,23 +40,23 @@ impl RelativePart {
     }
     pub fn get_label(&self) -> (Option<u64>, &'static str) {
         match self {
-            RelativePart::FewSecs => (None, SECONDS),
-            RelativePart::AboutAMinute => (None, MINUTE),
-            RelativePart::Minutes(x) => (Some(*x), MINUTES),
-            RelativePart::AboutAnHour => (None, HOUR),
-            RelativePart::Hours(x) => (Some(*x), HOURS),
-            RelativePart::AboutADay => (None, DAY),
-            RelativePart::Days(x) => (Some(*x), DAYS),
-            RelativePart::AboutAMonth => (None, MONTH),
-            RelativePart::Months(x) => (Some(*x), MONTHS),
-            RelativePart::AboutAYear => (None, YEAR),
-            RelativePart::Years(x) => (Some(*x), YEARS),
+            RelativePart::FewSecs => (None, "less than a minute"),
+            RelativePart::AboutAMinute => (None, "about a minute"),
+            RelativePart::Minutes(x) => (Some(*x), "## minutes"),
+            RelativePart::AboutAnHour => (None, "about an hour"),
+            RelativePart::Hours(x) => (Some(*x), "about ## hours"),
+            RelativePart::AboutADay => (None, "a day"),
+            RelativePart::Days(x) => (Some(*x), "## days"),
+            RelativePart::AboutAMonth => (None, "about a month"),
+            RelativePart::Months(x) => (Some(*x), "## months"),
+            RelativePart::AboutAYear => (None, "about a year"),
+            RelativePart::Years(x) => (Some(*x), "## years"),
         }
     }
     pub fn get_label_string(&self) -> String {
         let (val, label) = self.get_label();
         if let Some(x) = val {
-            label.replace("%d", &x.to_string())
+            label.replace("##", &x.to_string())
         } else {
             label.into()
         }
