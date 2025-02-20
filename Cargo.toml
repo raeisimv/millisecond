@@ -5,8 +5,8 @@ edition = "2021"
 authors = ["Morteza Raeisi<raeisimv@outlook.com>"]
 repository = "https://github.com/raeisimv/millisecond.git"
 categories = ["visualization", "value-formatting", "date-and-time", "no-std", "parsing"]
-keywords = ["millisecond", "pretty-millisecond", "pretty-ms", "pretty-date", "date-time"]
-description = "Format milliseconds into a human-readable format. It also, parse a milliseonds into its core parts, including years, days, hours, etc. This package has no-std dependency."
+keywords = ["pretty-ms", "pretty-date", "relative-date-time", "timestamp","human-readable"]
+description = "Format milliseconds into a human-readable and relative timestamp formats. This package has no-std dependency."
 readme = "readme.md"
 license = "MIT"
 
