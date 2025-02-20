@@ -23,7 +23,7 @@ fn main() {
     println!("{}", dur.pretty_with(&MillisecondOption::long()));
     // displays: 1 year 17 days 5 hours 10 minutes 48 seconds
 
-    println!("{} ago", dur.relative());
+    println!("{}", dur.relative());
     // displays: about a year ago
 
     // the previous solution still works
