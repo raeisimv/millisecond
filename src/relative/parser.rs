@@ -1,6 +1,7 @@
 use alloc::string::{String, ToString};
 use core::time::Duration;
 
+/// Carries the state of the given timestamp
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum RelativePart {
     FewSecs,
@@ -16,6 +17,7 @@ pub enum RelativePart {
     Years(u64),
 }
 impl RelativePart {
+    /// Generates a relative-token from the given seconds
     pub fn from_secs(secs: u64) -> Self {
         match secs / 31536000 {
             0 => match secs / 2592000 {
@@ -39,6 +41,8 @@ impl RelativePart {
             x => RelativePart::Years(x),
         }
     }
+
+    /// Gets label for the relative-timestamp-token
     pub fn get_label(&self) -> (Option<u64>, &'static str) {
         match self {
             RelativePart::FewSecs => (None, "less than a minute"),
@@ -54,6 +58,8 @@ impl RelativePart {
             RelativePart::Years(x) => (Some(*x), "## years"),
         }
     }
+
+    /// Replaces the values and generates the final human-readable string
     pub fn get_label_string(&self) -> String {
         let (val, label) = self.get_label();
         if let Some(x) = val {
@@ -64,6 +70,7 @@ impl RelativePart {
     }
 }
 
+/// Conversion which converts Duration into a relative-part-token easily
 impl From<Duration> for RelativePart {
     fn from(value: Duration) -> Self {
         Self::from_secs(value.as_secs())
