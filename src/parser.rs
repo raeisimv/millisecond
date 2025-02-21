@@ -1,21 +1,25 @@
 use alloc::{format, string::String, vec::Vec};
 use core::time::Duration;
 
+/// The protocol for being a Millisecond Formatter
+/// This protocol is implemented for Duration and Millisecond structs
 pub trait MillisecondFormatter {
     type Output;
 
+    /// Returns human-readable and pretty string of the given value/struct with custom options
     fn pretty_with(&self, opt: &MillisecondOption) -> Self::Output;
 
+    /// Returns human-readable and pretty string of the given value/struct with default options
     fn pretty(&self) -> Self::Output {
         self.pretty_with(&MillisecondOption::default())
     }
 
-    #[deprecated(since = "0.4.0", note = "use the `pretty` function instead")]
+    #[deprecated(since = "0.4.0", note = "use the `pretty` instead")]
     fn to_short_string(&self) -> Self::Output {
         self.pretty()
     }
 
-    #[deprecated(since = "0.4.0", note = "use the `pretty_with` function instead")]
+    #[deprecated(since = "0.4.0", note = "use the `pretty_with` instead")]
     fn to_long_string(&self) -> Self::Output {
         self.pretty_with(&MillisecondOption::long())
     }
@@ -46,6 +50,7 @@ pub struct MillisecondOption {
 }
 
 impl MillisecondOption {
+    /// Creates Options for showing a long and verbose string
     pub fn long() -> Self {
         Self {
             long: true,
@@ -66,6 +71,7 @@ pub enum MillisecondPart {
     Nanos(u16),
 }
 
+/// This function parse the given Duration into crate's language for further use.
 pub fn parse_duration(dur: &Duration, opt: &MillisecondOption) -> [Option<MillisecondPart>; 8] {
     let mut parts = [None; 8];
     if dur.is_zero() {
@@ -134,6 +140,7 @@ pub fn parse_duration(dur: &Duration, opt: &MillisecondOption) -> [Option<Millis
 }
 
 impl MillisecondPart {
+    /// Converts the crate's language to human-readable string
     pub fn get_label(&self, long: bool) -> String {
         match self {
             MillisecondPart::Years(x) => {
@@ -228,6 +235,7 @@ impl MillisecondPart {
     }
 }
 
+/// Converts the crate's language tokens into the human-readable string
 pub fn ms_parts_to_string(parts: &[Option<MillisecondPart>; 8], opt: &MillisecondOption) -> String {
     let take = if opt.dominant_only {
         1
