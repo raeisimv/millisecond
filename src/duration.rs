@@ -1,5 +1,6 @@
 use crate::duration::Weekday::{Friday, Monday, Saturday, Sunday, Thursday, Tuesday, Wednesday};
 
+/// A Strongly Typed definition for day of week 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Weekday {
     Sunday,
@@ -24,7 +25,10 @@ impl From<Weekday> for u8 {
         }
     }
 }
+
+/// Duration parsing errors
 pub enum DurationError {
+    /// The is not a valid week day
     InvalidConversion,
 }
 
