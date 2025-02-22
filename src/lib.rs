@@ -14,6 +14,7 @@ pub use parser::MillisecondOption;
 pub use relative::parser::RelativePart;
 pub use splitter::Millisecond;
 
+pub mod duration;
 pub mod parser;
 pub mod prelude;
 pub mod relative;
