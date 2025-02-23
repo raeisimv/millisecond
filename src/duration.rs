@@ -1,7 +1,7 @@
 use crate::duration::Weekday::{Friday, Monday, Saturday, Sunday, Thursday, Tuesday, Wednesday};
 use core::time::Duration;
 
-/// A Strongly Typed definition for day of week 
+/// A Strongly Typed definition for day of week
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Weekday {
     Sunday,
