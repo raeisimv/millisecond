@@ -1,4 +1,5 @@
 use crate::duration::Weekday::{Friday, Monday, Saturday, Sunday, Thursday, Tuesday, Wednesday};
+use core::time::Duration;
 
 /// A Strongly Typed definition for day of week 
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
@@ -22,6 +23,28 @@ impl From<Weekday> for u8 {
             Thursday => 4,
             Friday => 5,
             Saturday => 6,
+        }
+    }
+}
+
+impl From<Duration> for Weekday {
+    /// Converts a duration into corresponding weekday.
+    ///
+    /// ## Note
+    /// This function assumes the duration is from Linux Epoch, which starts at (Thursday, January 1, 1970)
+    ///
+    /// ### Link
+    /// I've posted it on [StackOverflow](https://stackoverflow.com/questions/66181608/how-can-i-get-the-current-weekday-in-rust-using-the-chrono-crate/79461838#79461838)
+    fn from(value: Duration) -> Self {
+        match (value.as_secs() / 86400) % 7 {
+            0 => Thursday, // zero is Thursday
+            1 => Friday,
+            2 => Saturday,
+            3 => Sunday,
+            4 => Monday,
+            5 => Tuesday,
+            6 => Wednesday,
+            _ => panic!("Invalid duration - never happens"),
         }
     }
 }
