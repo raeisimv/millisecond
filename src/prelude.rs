@@ -1,3 +1,4 @@
+pub use crate::duration::*;
 pub use crate::parser::*;
 pub use crate::relative::formatter::*;
 pub use crate::relative::parser::*;
