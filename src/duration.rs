@@ -13,6 +13,20 @@ pub enum Weekday {
     Saturday,
 }
 
+impl Weekday {
+    pub fn to_str(&self) -> &'static str {
+        match self {
+            Sunday => "Sunday",
+            Monday => "Monday",
+            Tuesday => "Tuesday",
+            Wednesday => "Wednesday",
+            Thursday => "Thursday",
+            Friday => "Friday",
+            Saturday => "Saturday",
+        }
+    }
+}
+
 impl From<Weekday> for u8 {
     fn from(value: Weekday) -> Self {
         match value {
