@@ -1,6 +1,23 @@
 use crate::duration::Weekday::{Friday, Monday, Saturday, Sunday, Thursday, Tuesday, Wednesday};
 use core::time::Duration;
 
+/// The protocol for types which would convert to weekday. e.g. Duration and Time
+pub trait WeekdayConversion {
+    /// Returns the weekday for the given value
+    fn weekday(&self) -> Weekday;
+
+    /// Return the weekday in string for the given value
+    fn weekday_str(&self) -> &'static str {
+        self.weekday().to_str()
+    }
+}
+
+impl WeekdayConversion for Duration {
+    fn weekday(&self) -> Weekday {
+        Weekday::from(*self)
+    }
+}
+
 /// A Strongly Typed definition for day of week
 #[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash)]
 pub enum Weekday {
@@ -95,6 +112,13 @@ mod tests {
     fn should_convert_to_epoch() {
         let dur: Weekday = Duration::from_secs(0).into();
         assert_eq!(dur.to_str(), "Thursday");
+    }
+
+    #[test]
+    fn should_convert_duration_to_weekday() {
+        let dur = Duration::from_secs(0);
+        assert_eq!(dur.weekday().to_str(), "Thursday");
+        assert_eq!(dur.weekday_str(), "Thursday");
     }
 
     #[test]
