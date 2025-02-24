@@ -85,3 +85,35 @@ impl TryFrom<u8> for Weekday {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use core::time::Duration;
+
+    #[test]
+    fn should_convert_to_epoch() {
+        let dur: Weekday = Duration::from_secs(0).into();
+        assert_eq!(dur.to_str(), "Thursday");
+    }
+
+    #[test]
+    fn should_convert_to_weekday() {
+        let dur: Weekday = Duration::from_secs(0).into();
+        assert_eq!(dur.to_str(), "Thursday");
+        let dur: Weekday = Duration::from_secs(24 * 60 * 60).into();
+        assert_eq!(dur.to_str(), "Friday");
+        let dur: Weekday = Duration::from_secs(2 * 24 * 60 * 60).into();
+        assert_eq!(dur.to_str(), "Saturday");
+        let dur: Weekday = Duration::from_secs(3 * 24 * 60 * 60).into();
+        assert_eq!(dur.to_str(), "Sunday");
+        let dur: Weekday = Duration::from_secs(4 * 24 * 60 * 60).into();
+        assert_eq!(dur.to_str(), "Monday");
+        let dur: Weekday = Duration::from_secs(5 * 24 * 60 * 60).into();
+        assert_eq!(dur.to_str(), "Tuesday");
+        let dur: Weekday = Duration::from_secs(6 * 24 * 60 * 60).into();
+        assert_eq!(dur.to_str(), "Wednesday");
+        let dur: Weekday = Duration::from_secs(7 * 24 * 60 * 60).into();
+        assert_eq!(dur.to_str(), "Thursday");
+    }
+}
