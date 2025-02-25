@@ -1,4 +1,5 @@
 use crate::duration::Weekday::{Friday, Monday, Saturday, Sunday, Thursday, Tuesday, Wednesday};
+use core::fmt::{Display, Formatter};
 use core::time::Duration;
 
 /// The protocol for types which would convert to weekday. e.g. Duration and Time
@@ -41,6 +42,12 @@ impl Weekday {
             Friday => "Friday",
             Saturday => "Saturday",
         }
+    }
+}
+
+impl Display for Weekday {
+    fn fmt(&self, f: &mut Formatter<'_>) -> core::fmt::Result {
+        write!(f, "{}", self.to_str())
     }
 }
 
@@ -106,12 +113,21 @@ impl TryFrom<u8> for Weekday {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use alloc::format;
+    use alloc::string::ToString;
     use core::time::Duration;
 
     #[test]
     fn should_convert_to_epoch() {
         let dur: Weekday = Duration::from_secs(0).into();
         assert_eq!(dur.to_str(), "Thursday");
+    }
+
+    #[test]
+    fn should_convert_to_string() {
+        let dur: Weekday = Duration::from_secs(0).into();
+        assert_eq!(dur.to_string(), "Thursday");
+        assert_eq!(format!("{}", dur), "Thursday");
     }
 
     #[test]
