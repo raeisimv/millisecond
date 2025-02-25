@@ -1,7 +1,10 @@
 # Millisecond crate
-A better way to format and display duration, which converts `33023448000ms` to `1y 17d 5h 10m 48s` or relatively timestamp of`about a year ago`.
+
+A better way to format and display duration, which converts `33023448000ms` to `1y 17d 5h 10m 48s` or relatively
+timestamp of`about a year ago`.
 
 ## Install
+
 In your Rust project's root directory run:
 
 ```shell
@@ -9,6 +12,7 @@ $ cargo add millisecond
 ```
 
 ## Example
+
 ```rust
 // Activate and bring the crate into scope
 use millisecond::prelude::*;
@@ -34,6 +38,7 @@ fn main() {
 ```
 
 ## Options
+
 Customize the parser and the output format using the `MillisecondOption` struct.
 
 | Option                  | Description                                                                                             | Example           |
@@ -45,16 +50,37 @@ Customize the parser and the output format using the `MillisecondOption` struct.
 *All options have default value unless specified*
 
 ### Options shorthand
+
 In order to easily create a `MillisecondOption` instance, you can use the `MillisecondOption::default()` method:
-```rust
+
+```
 let option = MillisecondOption {
-    days_instead_of_years: true,
-    ..MillisecondOption::default()
+days_instead_of_years: true,
+..MillisecondOption::default ()
 };
 ```
+
+## Day of Week
+
+Calculating the weekday could be easy if the duration was calculated from a known epoch. The `weekday` function
+is implemented to convert the duration into the proper weekday value (enum).
+
+```rust
+use millisecond::prelude::*;
+use std::time::{SystemTime, UNIX_EPOCH};
+
+fn main() {
+    let dur = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
+    println!("today: {}", dur.weekday());
+}
+```
+
 ___
+
 ### License
+
 MIT
 
 ##### Inspiration
+
 This crate is inspired by `pretty-ms` npm package.
