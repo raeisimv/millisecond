@@ -1,4 +1,6 @@
-use crate::duration::Weekday::{Friday, Monday, Saturday, Sunday, Thursday, Tuesday, Wednesday};
+use crate::weekday::duration::Weekday::{
+    Friday, Monday, Saturday, Sunday, Thursday, Tuesday, Wednesday,
+};
 use core::fmt::{Display, Formatter};
 use core::time::Duration;
 

@@ -13,7 +13,7 @@ pub use pretty::parser::{MillisecondFormatter, MillisecondOption};
 pub use pretty::splitter::Millisecond;
 pub use relative::parser::RelativePart;
 
-pub mod duration;
 pub mod prelude;
 pub mod pretty;
 pub mod relative;
+pub mod weekday;
