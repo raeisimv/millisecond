@@ -4,3 +4,4 @@ pub use crate::relative::formatter::*;
 pub use crate::relative::parser::*;
 pub use crate::relative::*;
 pub use crate::weekday::duration::*;
+pub use crate::weekday::formatter::*;
