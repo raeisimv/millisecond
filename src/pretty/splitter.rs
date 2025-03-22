@@ -6,7 +6,7 @@ use core::{
 
 use alloc::string::String;
 
-use crate::parser::MillisecondFormatter;
+use crate::pretty::parser::MillisecondFormatter;
 
 /// The input value, specified in milliseconds, is parsed and decomposed into constituent
 /// components such as years, days, and seconds. These components can subsequently be utilized
@@ -15,7 +15,7 @@ use crate::parser::MillisecondFormatter;
 ///
 /// ## Example
 /// ```rust
-/// use crate::millisecond::prelude::*;
+/// use millisecond::prelude::*;
 ///
 /// let ms = Millisecond::from_millis(33023448000);
 ///
@@ -33,7 +33,7 @@ use crate::parser::MillisecondFormatter;
 /// This struct implements `From` and `Deref` from/to `core::time::Duration`.
 ///
 /// ```rust
-/// use crate::millisecond::prelude::*;
+/// use millisecond::prelude::*;
 /// use core::time::Duration;
 ///
 /// // convert into:
@@ -163,7 +163,7 @@ impl Millisecond {
 impl MillisecondFormatter for Millisecond {
     type Output = String;
 
-    fn pretty_with(&self, opt: &crate::parser::MillisecondOption) -> Self::Output {
+    fn pretty_with(&self, opt: &crate::pretty::parser::MillisecondOption) -> Self::Output {
         self.dur.pretty_with(opt)
     }
 }

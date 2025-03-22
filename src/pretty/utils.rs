@@ -13,7 +13,7 @@ pub struct ParsedUnitValue<T: Eq + Debug = u8, U: Eq + Debug = u64> {
 ///## example
 ///```rust
 /// use std::time::Duration;
-/// use millisecond::utils::parse_secs;
+/// use millisecond::pretty::utils::parse_secs;
 ///
 /// let parsed = parse_secs(61);
 /// assert_eq!(parsed.unit, 1_u8); // 1 second
@@ -35,7 +35,7 @@ pub fn parse_secs(total_secs: u64) -> ParsedUnitValue<u8, u64> {
 ///## example
 ///```rust
 /// use std::time::Duration;
-/// use millisecond::utils::parse_mins;
+/// use millisecond::pretty::utils::parse_mins;
 ///
 /// let parsed = parse_mins(61);
 /// assert_eq!(parsed.unit, 1_u8); // 1 minute
@@ -57,7 +57,7 @@ pub fn parse_mins(total_mins: u64) -> ParsedUnitValue<u8, u64> {
 /// ## example
 ///```rust
 /// use std::time::Duration;
-/// use millisecond::utils::parse_hours;
+/// use millisecond::pretty::utils::parse_hours;
 ///
 /// let parsed = parse_hours(25);
 /// assert_eq!(parsed.unit, 1_u8); // 1 hour
@@ -79,7 +79,7 @@ pub fn parse_hours(total_hours: u64) -> ParsedUnitValue<u8, u64> {
 /// ## example
 ///```rust
 /// use std::time::Duration;
-/// use millisecond::utils::parse_days;
+/// use millisecond::pretty::utils::parse_days;
 ///
 /// let parsed = parse_days(366);
 /// assert_eq!(parsed.unit, 1_u16); // 1 day

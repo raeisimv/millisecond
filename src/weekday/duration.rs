@@ -1,17 +1,9 @@
-use crate::duration::Weekday::{Friday, Monday, Saturday, Sunday, Thursday, Tuesday, Wednesday};
+use crate::weekday::duration::Weekday::{
+    Friday, Monday, Saturday, Sunday, Thursday, Tuesday, Wednesday,
+};
+use crate::weekday::formatter::WeekdayConversion;
 use core::fmt::{Display, Formatter};
 use core::time::Duration;
-
-/// The protocol for types which would convert to weekday. e.g. Duration and Time
-pub trait WeekdayConversion {
-    /// Returns the weekday for the given value
-    fn weekday(&self) -> Weekday;
-
-    /// Return the weekday in string for the given value
-    fn weekday_str(&self) -> &'static str {
-        self.weekday().to_str()
-    }
-}
 
 impl WeekdayConversion for Duration {
     fn weekday(&self) -> Weekday {
