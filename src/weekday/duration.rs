@@ -119,7 +119,7 @@ mod tests {
     fn should_convert_to_string() {
         let dur: Weekday = Duration::from_secs(0).into();
         assert_eq!(dur.to_string(), "Thursday");
-        assert_eq!(format!("{}", dur), "Thursday");
+        assert_eq!(format!("{dur}"), "Thursday");
     }
 
     #[test]

@@ -126,13 +126,11 @@ mod tests {
             let min_res = parse_mins(actual);
             assert_eq!(
                 sec_res, expected,
-                "Seconds -> Expected:{:?} Got:{:?}",
-                expected, sec_res
+                "Seconds -> Expected:{expected:?} Got:{sec_res:?}"
             );
             assert_eq!(
                 min_res, expected,
-                "Minutes -> Expected:{:?} Got:{:?}",
-                expected, min_res
+                "Minutes -> Expected:{expected:?} Got:{min_res:?}"
             );
         }
     }
