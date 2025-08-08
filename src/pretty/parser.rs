@@ -37,7 +37,7 @@ impl MillisecondFormatter for Duration {
 /// The options struct serves as a configuration mechanism for both parsing input and producing
 /// the final formatted output. It allows you to customize the behavior and settings used during
 /// these processes to tailor the results according to your specific requirements.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Copy, Clone, Default)]
 pub struct MillisecondOption {
     /// When enabled, uses full and descriptive labels for time units, such as `years` instead of abbreviated forms like `y`.
     pub long: bool,
