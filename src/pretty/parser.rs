@@ -7,11 +7,11 @@ pub trait MillisecondFormatter {
     type Output;
 
     /// Returns human-readable and pretty string of the given value/struct with custom options
-    fn pretty_with(&self, opt: &MillisecondOption) -> Self::Output;
+    fn pretty_with(&self, opt: MillisecondOption) -> Self::Output;
 
     /// Returns human-readable and pretty string of the given value/struct with default options
     fn pretty(&self) -> Self::Output {
-        self.pretty_with(&MillisecondOption::default())
+        self.pretty_with(MillisecondOption::default())
     }
 
     #[deprecated(since = "0.4.0", note = "use the `pretty` instead")]
@@ -21,16 +21,16 @@ pub trait MillisecondFormatter {
 
     #[deprecated(since = "0.4.0", note = "use the `pretty_with` instead")]
     fn to_long_string(&self) -> Self::Output {
-        self.pretty_with(&MillisecondOption::long())
+        self.pretty_with(MillisecondOption::long())
     }
 }
 
 impl MillisecondFormatter for Duration {
     type Output = String;
 
-    fn pretty_with(&self, opt: &MillisecondOption) -> Self::Output {
-        let parts = parse_duration(self, opt);
-        ms_parts_to_string(&parts, opt)
+    fn pretty_with(&self, opt: MillisecondOption) -> Self::Output {
+        let parts = parse_duration(self, &opt);
+        ms_parts_to_string(&parts, &opt)
     }
 }
 

@@ -25,7 +25,7 @@ use crate::pretty::parser::MillisecondFormatter;
 /// print!("short: {}", ms.pretty());
 /// // short: 1y 17d 5h 10m 48s
 ///
-/// print!("long: {}", ms.pretty_with(&MillisecondOption::long()));
+/// print!("long: {}", ms.pretty_with(MillisecondOption::long()));
 /// // long: 1 year 17 days 5 hours 10 minutes 48 seconds
 /// ```
 ///
@@ -163,7 +163,7 @@ impl Millisecond {
 impl MillisecondFormatter for Millisecond {
     type Output = String;
 
-    fn pretty_with(&self, opt: &crate::pretty::parser::MillisecondOption) -> Self::Output {
+    fn pretty_with(&self, opt: crate::pretty::parser::MillisecondOption) -> Self::Output {
         self.dur.pretty_with(opt)
     }
 }
