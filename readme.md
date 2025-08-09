@@ -24,7 +24,7 @@ fn main() {
     println!("{}", dur.pretty());
     // displays: 1y 17d 5h 10m 48s
 
-    println!("{}", dur.pretty_with(&MillisecondOption::long()));
+    println!("{}", dur.pretty_with(MillisecondOption::long()));
     // displays: 1 year 17 days 5 hours 10 minutes 48 seconds
 
     println!("{}", dur.relative());
