@@ -6,7 +6,7 @@ pub struct ParsedUnitValue<T: Eq + Debug = u8, U: Eq + Debug = u64> {
     pub total: U,
 }
 
-/// Convert the provided total seconds into its corresponding seconds (0-59) and the remaining total minutes.
+/// Converts the provided total seconds into its corresponding seconds (0-59) and the remaining total minutes.
 ///
 /// > The unit is in the range of 0-59, while the total is the result of division by 60.
 ///
@@ -28,7 +28,7 @@ pub fn parse_secs(total_secs: u64) -> ParsedUnitValue<u8, u64> {
     }
 }
 
-/// Convert the provided total minutes into its corresponding minutes (0-59) and the remaining total hours.
+/// Converts the provided total minutes into its corresponding minutes (0-59) and the remaining total hours.
 ///
 /// > The unit is in the range of 0-59, while the total is the result of division by 60.
 ///
@@ -50,7 +50,7 @@ pub fn parse_mins(total_mins: u64) -> ParsedUnitValue<u8, u64> {
     }
 }
 
-/// Convert the provided total hours into its corresponding hours (0-23) and the remaining total days.
+/// Converts the provided total hours into its corresponding hours (0-23) and the remaining total days.
 ///
 /// > The unit is in the range of 0-23, while the total is the result of division by 24.
 ///
@@ -72,7 +72,7 @@ pub fn parse_hours(total_hours: u64) -> ParsedUnitValue<u8, u64> {
     }
 }
 
-/// Convert the provided total days into its corresponding days (0-365) and the remaining total years.
+/// Converts the provided total days into its corresponding days (0-365) and the remaining total years.
 ///
 /// > The unit is in the range of 0-365, while the total is the result of division by 365.
 ///
