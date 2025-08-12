@@ -5,26 +5,25 @@ pub struct ParsedUnitValue<T: Eq + Debug = u8, U: Eq + Debug = u64> {
     pub unit: T,
     pub total: U,
 }
-
-/// Converts the provided total seconds into its corresponding seconds (0-59) and the remaining total minutes.
-///
-/// > The unit is in the range of 0-59, while the total is the result of division by 60.
-///
-///## example
-///```rust
-/// use std::time::Duration;
-/// use millisecond::pretty::utils::parse_secs;
-///
-/// let parsed = parse_secs(61);
-/// assert_eq!(parsed.unit, 1_u8); // 1 second
-/// assert_eq!(parsed.total, 1); // 1 minute
-/// ```
-///
-#[inline]
-pub fn parse_secs(total_secs: u64) -> ParsedUnitValue<u8, u64> {
-    ParsedUnitValue {
-        unit: (total_secs % 60) as u8,
-        total: total_secs / 60,
+impl ParsedUnitValue<u8, u64> {
+    /// Converts the provided total seconds into its corresponding seconds (0-59) and the remaining total minutes.
+    ///
+    /// > The unit is in the range of 0-59, while the total is the result of division by 60.
+    ///
+    ///## example
+    ///```rust
+    /// use millisecond::pretty::utils::ParsedUnitValue;
+    ///
+    /// let parsed = ParsedUnitValue::parse_secs(61);
+    /// assert_eq!(parsed.unit, 1_u8); // 1 second
+    /// assert_eq!(parsed.total, 1); // 1 minute
+    /// ```
+    #[inline]
+    pub fn parse_secs(total_secs: u64) -> Self {
+        ParsedUnitValue {
+            unit: (total_secs % 60) as _,
+            total: total_secs / 60,
+        }
     }
 }
 
@@ -122,7 +121,7 @@ mod tests {
         ];
 
         for (actual, expected) in cases {
-            let sec_res = parse_secs(actual);
+            let sec_res = ParsedUnitValue::parse_secs(actual);
             let min_res = parse_mins(actual);
             assert_eq!(
                 sec_res, expected,
