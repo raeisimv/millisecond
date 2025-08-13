@@ -78,7 +78,7 @@ pub fn parse_duration(dur: &Duration, opt: &MillisecondOption) -> [Option<Millis
         return parts;
     }
 
-    use crate::pretty::utils::{parse_days, parse_hours, parse_mins, ParsedUnitValue};
+    use crate::pretty::utils::{parse_days, parse_hours, ParsedUnitValue};
 
     let total_nanos = dur.subsec_nanos();
     if total_nanos > 0 {
@@ -106,7 +106,7 @@ pub fn parse_duration(dur: &Duration, opt: &MillisecondOption) -> [Option<Millis
         parts[4] = Some(MillisecondPart::Seconds(secs));
     }
     if total > 0 {
-        let ParsedUnitValue { unit: mins, total } = parse_mins(total);
+        let ParsedUnitValue { unit: mins, total } = ParsedUnitValue::parse_mins(total);
         if mins > 0 {
             parts[3] = Some(MillisecondPart::Minutes(mins));
         }
