@@ -47,27 +47,28 @@ impl ParsedUnitValue<u8, u64> {
             total: total_mins / 60,
         }
     }
-}
 
-/// Converts the provided total hours into its corresponding hours (0-23) and the remaining total days.
-///
-/// > The unit is in the range of 0-23, while the total is the result of division by 24.
-///
-/// ## example
-///```rust
-/// use std::time::Duration;
-/// use millisecond::pretty::utils::parse_hours;
-///
-/// let parsed = parse_hours(25);
-/// assert_eq!(parsed.unit, 1_u8); // 1 hour
-/// assert_eq!(parsed.total, 1); // 1 day
-/// ```
-///
-#[inline]
-pub fn parse_hours(total_hours: u64) -> ParsedUnitValue<u8, u64> {
-    ParsedUnitValue {
-        unit: (total_hours % 24) as u8,
-        total: total_hours / 24,
+
+    /// Converts the provided total hours into its corresponding hours (0-23) and the remaining total days.
+    ///
+    /// > The unit is in the range of 0-23, while the total is the result of division by 24.
+    ///
+    /// ## example
+    ///```rust
+    /// use std::time::Duration;
+    /// use millisecond::pretty::utils::ParsedUnitValue;
+    ///
+    /// let parsed = ParsedUnitValue::parse_hours(25);
+    /// assert_eq!(parsed.unit, 1_u8); // 1 hour
+    /// assert_eq!(parsed.total, 1); // 1 day
+    /// ```
+    ///
+    #[inline]
+    pub fn parse_hours(total_hours: u64) -> ParsedUnitValue<u8, u64> {
+        ParsedUnitValue {
+            unit: (total_hours % 24) as u8,
+            total: total_hours / 24,
+        }
     }
 }
 
@@ -157,7 +158,7 @@ mod tests {
         ];
 
         for (actual, expected) in cases {
-            let res = parse_hours(actual);
+            let res = ParsedUnitValue::parse_hours(actual);
             assert_eq!(res, expected);
         }
     }
