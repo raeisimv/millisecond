@@ -48,7 +48,6 @@ impl ParsedUnitValue<u8, u64> {
         }
     }
 
-
     /// Converts the provided total hours into its corresponding hours (0-23) and the remaining total days.
     ///
     /// > The unit is in the range of 0-23, while the total is the result of division by 24.
@@ -70,29 +69,30 @@ impl ParsedUnitValue<u8, u64> {
             total: total_hours / 24,
         }
     }
-}
 
-/// Converts the provided total days into its corresponding days (0-365) and the remaining total years.
-///
-/// > The unit is in the range of 0-365, while the total is the result of division by 365.
-///
-/// ## example
-///```rust
-/// use std::time::Duration;
-/// use millisecond::pretty::utils::parse_days;
-///
-/// let parsed = parse_days(366);
-/// assert_eq!(parsed.unit, 1_u16); // 1 day
-/// assert_eq!(parsed.total, 1); // 1 year
-/// ```
-///
-#[inline]
-pub fn parse_days(total_days: u64) -> ParsedUnitValue<u16, u64> {
-    ParsedUnitValue {
-        unit: (total_days % 365) as u16,
-        total: total_days / 365,
+    /// Converts the provided total days into its corresponding days (0-365) and the remaining total years.
+    ///
+    /// > The unit is in the range of 0-365, while the total is the result of division by 365.
+    ///
+    /// ## example
+    ///```rust
+    /// use std::time::Duration;
+    /// use millisecond::pretty::utils::ParsedUnitValue;
+    ///
+    /// let parsed = ParsedUnitValue::parse_days(366);
+    /// assert_eq!(parsed.unit, 1_u16); // 1 day
+    /// assert_eq!(parsed.total, 1); // 1 year
+    /// ```
+    ///
+    #[inline]
+    pub fn parse_days(total_days: u64) -> ParsedUnitValue<u16, u64> {
+        ParsedUnitValue {
+            unit: (total_days % 365) as u16,
+            total: total_days / 365,
+        }
     }
 }
+
 
 #[cfg(test)]
 mod tests {
@@ -179,7 +179,7 @@ mod tests {
         ];
 
         for (actual, expected) in cases {
-            let res = parse_days(actual);
+            let res = ParsedUnitValue::parse_days(actual);
             assert_eq!(res, expected);
         }
     }
