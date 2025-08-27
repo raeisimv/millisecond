@@ -93,7 +93,6 @@ impl ParsedUnitValue<u8, u64> {
     }
 }
 
-
 #[cfg(test)]
 mod tests {
     use super::*;
