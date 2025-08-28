@@ -1,8 +1,8 @@
 use alloc::{format, string::String, vec::Vec};
 use core::time::Duration;
 
-/// The protocol for being a Millisecond Formatter
-/// This protocol is implemented for Duration and Millisecond structs
+/// Protocol for being a Millisecond Formatter.
+/// The protocol is implemented for `core::time::Duration` and `Millisecond` structs.
 pub trait MillisecondFormatter {
     type Output;
 
@@ -14,12 +14,18 @@ pub trait MillisecondFormatter {
         self.pretty_with(MillisecondOption::default())
     }
 
+    /// Returns human-readable text in a short string.
+    /// ### DEPRECATED
+    /// Use the `pretty` function instead.
     #[deprecated(since = "0.4.0", note = "use the `pretty` instead")]
     fn to_short_string(&self) -> Self::Output {
         self.pretty()
     }
 
-    #[deprecated(since = "0.4.0", note = "use the `pretty_with` instead")]
+    /// Returns human-readable text in a long and verbose string.
+    /// ### DEPRECATED
+    /// Use the `pretty_with` function instead.
+    #[deprecated(since = "0.4.0", note = "use the `pretty_with` function instead")]
     fn to_long_string(&self) -> Self::Output {
         self.pretty_with(MillisecondOption::long())
     }
