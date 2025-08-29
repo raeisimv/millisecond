@@ -6,7 +6,7 @@ use core::{
 
 use alloc::string::String;
 
-use crate::pretty::parser::MillisecondFormatter;
+use crate::pretty::MillisecondFormatter;
 
 /// The input value, specified in milliseconds, is parsed and decomposed into constituent
 /// components such as years, days, and seconds. These components can subsequently be utilized

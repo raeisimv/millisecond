@@ -9,8 +9,10 @@
 #![no_std]
 extern crate alloc;
 
-pub use pretty::parser::{MillisecondFormatter, MillisecondOption};
+pub use pretty::parser::MillisecondOption;
 pub use pretty::splitter::Millisecond;
+pub use pretty::MillisecondFormatter;
+
 pub use relative::parser::RelativePart;
 
 pub mod prelude;
