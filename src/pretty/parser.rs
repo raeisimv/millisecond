@@ -464,20 +464,7 @@ mod tests {
     #[test]
     fn should_convert_to_string() {
         let test_cases = [
-            (
-                [
-                    None,
-                    None,
-                    None,
-                    None,
-                    None,
-                    None,
-                    None,
-                    None,
-                ],
-                "",
-                ""
-            ),
+            ([None, None, None, None, None, None, None, None], "", ""),
             (
                 [
                     Some(MillisecondPart::Years(1)),
