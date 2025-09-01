@@ -6,7 +6,7 @@ use core::{
 
 use alloc::string::String;
 
-use crate::pretty::MillisecondFormatter;
+use crate::pretty::{MillisecondFormatter, MillisecondOption};
 
 /// The input value, specified in milliseconds, is parsed and decomposed into constituent
 /// components such as years, days, and seconds. These components can subsequently be utilized
@@ -163,7 +163,7 @@ impl Millisecond {
 impl MillisecondFormatter for Millisecond {
     type Output = String;
 
-    fn pretty_with(&self, opt: crate::pretty::parser::MillisecondOption) -> Self::Output {
+    fn pretty_with(&self, opt: MillisecondOption) -> Self::Output {
         self.dur.pretty_with(opt)
     }
 }

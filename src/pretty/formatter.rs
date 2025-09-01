@@ -1,8 +1,6 @@
 use alloc::string::String;
 use core::time::Duration;
 
-use crate::MillisecondOption;
-
 /// Protocol for being a Millisecond Formatter.
 /// The protocol is implemented for `core::time::Duration` and `Millisecond` structs.
 pub trait MillisecondFormatter {
@@ -39,5 +37,30 @@ impl MillisecondFormatter for Duration {
     fn pretty_with(&self, opt: MillisecondOption) -> Self::Output {
         let parts = super::parser::parse_duration(self, &opt);
         super::parser::ms_parts_to_string(&parts, &opt)
+    }
+}
+
+/// The options struct serves as a configuration mechanism for both parsing input and producing
+/// the final formatted output. It allows you to customize the behavior and settings used during
+/// these processes to tailor the results according to your specific requirements.
+#[derive(Debug, Copy, Clone, Default)]
+pub struct MillisecondOption {
+    /// When enabled, uses full and descriptive labels for time units, such as `years` instead of abbreviated forms like `y`.
+    pub long: bool,
+
+    /// When activated, displays time durations in days rather than converting them into years.
+    pub days_instead_of_years: bool,
+
+    /// When activated, displays the most dominant part only (the most left part).
+    pub dominant_only: bool,
+}
+
+impl MillisecondOption {
+    /// Creates Options for showing a long and verbose string
+    pub fn long() -> Self {
+        Self {
+            long: true,
+            ..Default::default()
+        }
     }
 }
