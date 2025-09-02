@@ -188,13 +188,6 @@ pub fn ms_parts_to_string(parts: &[Option<MillisecondPart>; 8], opt: &Millisecon
     };
     parts
         .iter()
-        .skip_while(|x| {
-            if opt.dominant_only {
-                x.is_none()
-            } else {
-                false
-            }
-        })
         .filter(|x| x.is_some())
         .take(take)
         .map(|x| x.unwrap().get_label(opt.long))
