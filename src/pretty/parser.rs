@@ -25,17 +25,22 @@ pub fn parse_duration(dur: &Duration, opt: &MillisecondOption) -> [Option<Millis
     use crate::pretty::utils::ParsedUnitValue;
 
     let total_nanos = dur.subsec_nanos();
+    let format_sub_millis = opt.format_sub_milliseconds;
     if total_nanos > 0 {
-        let nanos = total_nanos % 1_000;
-        if nanos > 0 {
-            parts[7] = Some(MillisecondPart::Nanos(nanos as _));
+        if format_sub_millis {
+            let nanos = total_nanos % 1_000;
+            if nanos > 0 {
+                parts[7] = Some(MillisecondPart::Nanos(nanos as _));
+            }
         }
 
         let micros = dur.subsec_micros();
         if micros > 0 {
-            let micros = micros % 1000;
-            if micros > 0 {
-                parts[6] = Some(MillisecondPart::Micros((micros % 1000) as _));
+            if format_sub_millis {
+                let micros = micros % 1000;
+                if micros > 0 {
+                    parts[6] = Some(MillisecondPart::Micros((micros % 1000) as _));
+                }
             }
 
             let millis = dur.subsec_millis();
@@ -260,8 +265,12 @@ mod tests {
             ),
         ];
 
+        let opt = MillisecondOption {
+            format_sub_milliseconds: true,
+            ..MillisecondOption::default()
+        };
         for (dur, exp) in cases.iter() {
-            let parts = parse_duration(dur, &MillisecondOption::default());
+            let parts = parse_duration(dur, &opt);
             assert_eq!(parts, *exp);
         }
     }
@@ -426,8 +435,12 @@ mod tests {
             ),
         ];
 
+        let opt = MillisecondOption {
+            format_sub_milliseconds: true,
+            ..MillisecondOption::default()
+        };
         for (dur, exp) in cases.iter() {
-            let parts = parse_duration(dur, &MillisecondOption::default());
+            let parts = parse_duration(dur, &opt);
             assert_eq!(parts, *exp);
         }
     }
@@ -479,11 +492,21 @@ mod tests {
             ),
         ];
 
+        let opt_short = MillisecondOption {
+            format_sub_milliseconds: true,
+            ..MillisecondOption::default()
+        };
+        let opt_long = MillisecondOption {
+            format_sub_milliseconds: true,
+            long: true,
+            ..MillisecondOption::default()
+        };
+
         for (test, exp_short, exp_long) in test_cases.iter() {
-            let act = ms_parts_to_string(test, &MillisecondOption::default());
+            let act = ms_parts_to_string(test, &opt_short);
             assert_eq!(act, *exp_short);
 
-            let act = ms_parts_to_string(test, &MillisecondOption::long());
+            let act = ms_parts_to_string(test, &opt_long);
             assert_eq!(act, *exp_long);
         }
     }
@@ -498,6 +521,7 @@ mod tests {
         for (test, exp) in test_cases.iter() {
             let opt = MillisecondOption {
                 days_instead_of_years: true,
+                format_sub_milliseconds: true,
                 ..MillisecondOption::default()
             };
 
@@ -526,6 +550,7 @@ mod tests {
         for (test, exp) in test_cases.iter() {
             let opt = MillisecondOption {
                 dominant_only: true,
+                format_sub_milliseconds: true,
                 ..MillisecondOption::default()
             };
 
