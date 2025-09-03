@@ -53,6 +53,9 @@ pub struct MillisecondOption {
 
     /// When activated, displays the most dominant part only (the most left part).
     pub dominant_only: bool,
+
+    /// When activated, shows and formats microseconds and nanoseconds.
+    pub format_sub_milliseconds: bool,
 }
 
 impl MillisecondOption {
@@ -60,6 +63,12 @@ impl MillisecondOption {
     pub fn long() -> Self {
         Self {
             long: true,
+            ..Default::default()
+        }
+    }
+    pub fn sub_milliseconds() -> Self {
+        Self {
+            format_sub_milliseconds: true,
             ..Default::default()
         }
     }
