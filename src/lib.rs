@@ -18,3 +18,24 @@ pub mod prelude;
 pub mod pretty;
 pub mod relative;
 pub mod weekday;
+
+#[cfg(test)]
+mod tests {
+
+    #[test]
+    fn should_work_always_with_backward_compatiblity() {
+        use crate::prelude::*;
+
+        let dur = core::time::Duration::from_millis(33_023_448_000);
+        assert_eq!("1y 17d 5h 10m 48s", dur.pretty());
+        assert_eq!(
+            "1 year 17 days 5 hours 10 minutes 48 seconds",
+            dur.pretty_with(MillisecondOption::long())
+        );
+        assert_eq!("about a year ago", dur.relative());
+
+        // the previous solution still works
+        let ms = Millisecond::from_millis(33_023_448_000);
+        assert_eq!("1y 17d 5h 10m 48s", ms.pretty());
+    }
+}
