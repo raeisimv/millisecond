@@ -41,11 +41,11 @@ fn main() {
 
 Customize the parser and the output format using the `MillisecondOption` struct.
 
-| Option                  | Description                                                                                             | Example           |
-|:------------------------|:--------------------------------------------------------------------------------------------------------|:------------------|
-| `long`                  | uses full and descriptive labels for time units, such as `years` instead of abbreviated forms like `y`. | `2y` -> `2 years` |
-| `dominant_only`         | displays the most dominant part only (the most left part).                                              | `1y 2d` -> `1y`   |
-| `days_instead_of_years` | displays time durations in days rather than converting them into years.                                 | `1y 1d` -> `366d` |
+| Option|  Description | Example|
+|:------------------------|:-------------------------------------------------------------|:----------------------------------|
+| `long`| uses full and descriptive labels for time units, such as `years` instead of abbreviated forms like `y` | `2y` -> `2 years` |
+| `dominant_only`| displays the most dominant part only (the most left part). | `1y 2d` -> `1y`   |
+| `days_instead_of_years` | displays time durations in days rather than converting them into years. | `1y 1d` -> `366d` |
 | `format_sub_milliseconds` | shows and formats microseconds and nanoseconds if present.| `1s 2ms` -> `1s 2ms 3µs 4ns` |
 
 *All options have default value unless specified*
