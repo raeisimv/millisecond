@@ -1,7 +1,10 @@
-use alloc::{format, string::String, vec::Vec};
+use alloc::{string::String, vec::Vec};
 use core::time::Duration;
 
-use crate::pretty::MillisecondOption;
+use crate::pretty::{
+    MillisecondOption,
+    text_gen::{get_part_long_label, get_part_short_label},
+};
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum MillisecondPart {
@@ -90,96 +93,11 @@ pub fn parse_duration(dur: &Duration, opt: &MillisecondOption) -> [Option<Millis
 
 impl MillisecondPart {
     /// Converts the crate's language to human-readable string
-    pub fn get_label(&self, long: bool) -> String {
-        match self {
-            MillisecondPart::Years(x) => {
-                if long {
-                    if *x != 1 {
-                        format!("{x} years")
-                    } else {
-                        format!("{x} year")
-                    }
-                } else {
-                    format!("{x}y")
-                }
-            }
-            MillisecondPart::Days(x) => {
-                if long {
-                    if *x != 1 {
-                        format!("{x} days")
-                    } else {
-                        format!("{x} day")
-                    }
-                } else {
-                    format!("{x}d")
-                }
-            }
-            MillisecondPart::Hours(x) => {
-                if long {
-                    if *x != 1 {
-                        format!("{x} hours")
-                    } else {
-                        format!("{x} hour")
-                    }
-                } else {
-                    format!("{x}h")
-                }
-            }
-            MillisecondPart::Minutes(x) => {
-                if long {
-                    if *x != 1 {
-                        format!("{x} minutes")
-                    } else {
-                        format!("{x} minute")
-                    }
-                } else {
-                    format!("{x}m")
-                }
-            }
-            MillisecondPart::Seconds(x) => {
-                if long {
-                    if *x != 1 {
-                        format!("{x} seconds")
-                    } else {
-                        format!("{x} second")
-                    }
-                } else {
-                    format!("{x}s")
-                }
-            }
-            MillisecondPart::Millis(x) => {
-                if long {
-                    if *x != 1 {
-                        format!("{x} milliseconds")
-                    } else {
-                        format!("{x} millisecond")
-                    }
-                } else {
-                    format!("{x}ms")
-                }
-            }
-            MillisecondPart::Micros(x) => {
-                if long {
-                    if *x != 1 {
-                        format!("{x} microseconds")
-                    } else {
-                        format!("{x} microsecond")
-                    }
-                } else {
-                    format!("{x}µs")
-                }
-            }
-            MillisecondPart::Nanos(x) => {
-                if long {
-                    if *x != 1 {
-                        format!("{x} nanoseconds")
-                    } else {
-                        format!("{x} nanosecond")
-                    }
-                } else {
-                    format!("{x}ns")
-                }
-            }
+    pub fn get_label(&self, opt: &MillisecondOption) -> String {
+        if opt.long {
+            get_part_long_label(self, opt)
+        } else {
+            get_part_short_label(self, opt)
         }
     }
 }
@@ -195,7 +113,7 @@ pub fn ms_parts_to_string(parts: &[Option<MillisecondPart>; 8], opt: &Millisecon
         .iter()
         .filter(|x| x.is_some())
         .take(take)
-        .map(|x| x.unwrap().get_label(opt.long))
+        .map(|x| x.unwrap().get_label(opt))
         .collect::<Vec<_>>()
         .join(" ")
 }
