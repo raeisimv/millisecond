@@ -57,8 +57,9 @@ pub struct MillisecondOption {
     /// When activated, shows and formats microseconds and nanoseconds.
     pub format_sub_milliseconds: bool,
 
-    /// When activated, separates the seconds from the milliseconds into two single digits.
-    pub separate_milliseconds: bool,
+    /// Determines how seconds and milliseconds should be formatted.
+    /// Default is `Combine`, which combines seconds and milliseconds into a single float number with precision of 1.
+    pub seconds: SecondsOptions,
 }
 
 impl MillisecondOption {
@@ -80,8 +81,38 @@ impl MillisecondOption {
     pub(crate) fn backward_compatible() -> Self {
         Self {
             format_sub_milliseconds: true,
-            separate_milliseconds: true,
+            seconds: SecondsOptions::Separate,
             ..Self::default()
         }
     }
+}
+
+/// Options for formatting seconds and milliseconds; either combined or separated.
+#[derive(Debug, Copy, Clone, Default)]
+pub enum SecondsOptions {
+    #[default]
+    /// Combines seconds and milliseconds into a single float value.
+    /// Example: 1.2s
+    Combine,
+
+    /// Combines seconds and milliseconds into a single float value with custom settings.
+    /// Example: 1.23s or 01.230s
+    CombineWith {
+        /// Determines the number of digits to show for the milliseconds part.
+        /// The default is 1, and the maximum is 3.
+        /// Other values are rounded to the specified range.
+        precision: u8,
+
+        /// Determines whether milliseconds should be displayed with a fixed width.
+        /// If true, seconds are always displayed with a fixed width of 2 digits,
+        /// and milliseconds with a fixed width based on the `precision` option.
+        fixed_width: bool,
+    },
+
+    /// Separates seconds and milliseconds into two single digits.
+    /// Example: 1s 2ms
+    Separate,
+
+    /// Hides seconds and milliseconds
+    Hide,
 }

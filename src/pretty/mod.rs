@@ -18,7 +18,7 @@ mod tests {
         assert_eq!(Millisecond::from_millis(1100).pretty(), "1.1s");
         assert_eq!(
             Millisecond::from_millis(1100).pretty_with(MillisecondOption {
-                separate_milliseconds: true,
+                seconds: SecondsOptions::Separate,
                 ..Default::default()
             }),
             "1s 100ms"

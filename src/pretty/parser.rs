@@ -2,7 +2,7 @@ use alloc::{string::String, vec::Vec};
 use core::time::Duration;
 
 use crate::pretty::{
-    MillisecondOption,
+    MillisecondOption, SecondsOptions,
     text_gen::{get_part_long_label, get_part_short_label},
 };
 
@@ -89,23 +89,33 @@ pub fn parse_duration(dur: &Duration, opt: &MillisecondOption) -> [Option<Millis
         }
     }
 
-    if !opt.separate_milliseconds {
-        let secs = if let Some(MillisecondPart::Seconds(secs)) = parts[4] {
+    match opt.seconds {
+        SecondsOptions::Combine | SecondsOptions::CombineWith { .. } => {
+            let secs = if let Some(MillisecondPart::Seconds(secs)) = parts[4] {
+                parts[4] = None;
+                secs
+            } else {
+                0
+            };
+            let millis = if let Some(MillisecondPart::Millis(millis)) = parts[5] {
+                parts[5] = None;
+                millis
+            } else {
+                0
+            };
+            if secs != 0 || millis != 0 {
+                parts[4] = Some(MillisecondPart::SecondsAndMs(secs, millis));
+            }
+        }
+        SecondsOptions::Separate => {
+            // do nothing it is already separated
+        }
+        SecondsOptions::Hide => {
             parts[4] = None;
-            secs
-        } else {
-            0
-        };
-        let millis = if let Some(MillisecondPart::Millis(millis)) = parts[5] {
             parts[5] = None;
-            millis
-        } else {
-            0
-        };
-        if secs != 0 || millis != 0 {
-            parts[4] = Some(MillisecondPart::SecondsAndMs(secs, millis));
         }
     }
+
     parts
 }
 
