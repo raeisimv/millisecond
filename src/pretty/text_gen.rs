@@ -1,8 +1,11 @@
-use alloc::{format, string::String};
+use alloc::{
+    format,
+    string::{String, ToString},
+};
 
 use crate::{MillisecondOption, pretty::MillisecondPart};
 
-pub(crate) fn get_part_long_label(part: &MillisecondPart, _opt: &MillisecondOption) -> String {
+pub(crate) fn get_part_long_label(part: &MillisecondPart, opt: &MillisecondOption) -> String {
     match part {
         MillisecondPart::Years(x) => {
             if *x != 1 {
@@ -39,6 +42,7 @@ pub(crate) fn get_part_long_label(part: &MillisecondPart, _opt: &MillisecondOpti
                 format!("{x} second")
             }
         }
+        MillisecondPart::SecondsAndMs(secs, millis) => combine_secs_and_millis(*secs, *millis, opt),
         MillisecondPart::Millis(x) => {
             if *x != 1 {
                 format!("{x} milliseconds")
@@ -62,31 +66,40 @@ pub(crate) fn get_part_long_label(part: &MillisecondPart, _opt: &MillisecondOpti
         }
     }
 }
-pub(crate) fn get_part_short_label(part: &MillisecondPart, _opt: &MillisecondOption) -> String {
+pub(crate) fn get_part_short_label(part: &MillisecondPart, opt: &MillisecondOption) -> String {
     match part {
-        MillisecondPart::Years(x) => {
-            format!("{x}y")
+        MillisecondPart::Years(x) => format!("{x}y"),
+        MillisecondPart::Days(x) => format!("{x}d"),
+        MillisecondPart::Hours(x) => format!("{x}h"),
+        MillisecondPart::Minutes(x) => format!("{x}m"),
+        MillisecondPart::Seconds(x) => format!("{x}s"),
+        MillisecondPart::SecondsAndMs(secs, millis) => combine_secs_and_millis(*secs, *millis, opt),
+        MillisecondPart::Millis(x) => format!("{x}ms"),
+        MillisecondPart::Micros(x) => format!("{x}µs"),
+        MillisecondPart::Nanos(x) => format!("{x}ns"),
+    }
+}
+
+fn combine_secs_and_millis(secs: u8, millis: u16, opt: &MillisecondOption) -> String {
+    let long = opt.long;
+    if millis == 0 {
+        if long {
+            format!("{} seconds", secs)
+        } else {
+            format!("{}s", secs)
         }
-        MillisecondPart::Days(x) => {
-            format!("{x}d")
+    } else if secs == 0 {
+        if long {
+            format!("{} milliseconds", millis)
+        } else {
+            format!("{}ms", millis)
         }
-        MillisecondPart::Hours(x) => {
-            format!("{x}h")
-        }
-        MillisecondPart::Minutes(x) => {
-            format!("{x}m")
-        }
-        MillisecondPart::Seconds(x) => {
-            format!("{x}s")
-        }
-        MillisecondPart::Millis(x) => {
-            format!("{x}ms")
-        }
-        MillisecondPart::Micros(x) => {
-            format!("{x}µs")
-        }
-        MillisecondPart::Nanos(x) => {
-            format!("{x}ns")
+    } else {
+        let no = format!("{}.{}", secs, millis.to_string().get(..1).unwrap_or("0"));
+        if long {
+            format!("{} seconds", no)
+        } else {
+            format!("{}s", no)
         }
     }
 }

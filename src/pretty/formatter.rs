@@ -56,6 +56,9 @@ pub struct MillisecondOption {
 
     /// When activated, shows and formats microseconds and nanoseconds.
     pub format_sub_milliseconds: bool,
+
+    /// When activated, separates the seconds from the milliseconds into two single digits.
+    pub separate_milliseconds: bool,
 }
 
 impl MillisecondOption {
@@ -70,6 +73,15 @@ impl MillisecondOption {
         Self {
             format_sub_milliseconds: true,
             ..Default::default()
+        }
+    }
+
+    #[cfg(test)]
+    pub(crate) fn for_test() -> Self {
+        Self {
+            format_sub_milliseconds: true,
+            separate_milliseconds: true,
+            ..Self::default()
         }
     }
 }
