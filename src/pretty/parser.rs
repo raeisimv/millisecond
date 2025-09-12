@@ -201,7 +201,7 @@ mod tests {
             ),
         ];
 
-        let opt = MillisecondOption::for_test();
+        let opt = MillisecondOption::backward_compatible();
         for (dur, exp) in cases.iter() {
             let parts = parse_duration(dur, &opt);
             assert_eq!(parts, *exp);
@@ -368,7 +368,7 @@ mod tests {
             ),
         ];
 
-        let opt = MillisecondOption::for_test();
+        let opt = MillisecondOption::backward_compatible();
         for (dur, exp) in cases.iter() {
             let parts = parse_duration(dur, &opt);
             assert_eq!(parts, *exp);
@@ -422,7 +422,7 @@ mod tests {
             ),
         ];
 
-        let opt_short = MillisecondOption::for_test();
+        let opt_short = MillisecondOption::backward_compatible();
         let opt_long = MillisecondOption {
             long: true,
             ..opt_short
@@ -446,7 +446,7 @@ mod tests {
 
         let opt = MillisecondOption {
             days_instead_of_years: true,
-            ..MillisecondOption::for_test()
+            ..MillisecondOption::backward_compatible()
         };
 
         for (test, exp) in test_cases.iter() {
@@ -475,7 +475,7 @@ mod tests {
         for (test, exp) in test_cases.iter() {
             let opt = MillisecondOption {
                 dominant_only: true,
-                ..MillisecondOption::for_test()
+                ..MillisecondOption::backward_compatible()
             };
 
             let act = ms_parts_to_string(&parse_duration(test, &opt), &opt);
@@ -485,7 +485,7 @@ mod tests {
         let opt = MillisecondOption {
             dominant_only: true,
             days_instead_of_years: true,
-            ..MillisecondOption::for_test()
+            ..MillisecondOption::backward_compatible()
         };
         assert_eq!(
             "366d",

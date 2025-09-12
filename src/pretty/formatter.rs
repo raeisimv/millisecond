@@ -77,7 +77,7 @@ impl MillisecondOption {
     }
 
     #[cfg(test)]
-    pub(crate) fn for_test() -> Self {
+    pub(crate) fn backward_compatible() -> Self {
         Self {
             format_sub_milliseconds: true,
             separate_milliseconds: true,

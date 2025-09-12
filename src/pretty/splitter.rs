@@ -181,7 +181,10 @@ mod tests {
     #[test]
     fn should_split_from_millis_basic() {
         let x = Millisecond::from_millis(10_123);
-        assert_eq!(x.pretty_with(MillisecondOption::for_test()), "10s 123ms");
+        assert_eq!(
+            x.pretty_with(MillisecondOption::backward_compatible()),
+            "10s 123ms"
+        );
     }
     #[test]
     fn should_split_from_millis() {
@@ -206,7 +209,7 @@ mod tests {
             (9007199254740991, "285616y 151d 8h 59m 991ms"), // "285616y 151d 8h 59m 0.9s"
             (u64::MAX, "584942417y 129d 14h 25m 51s 615ms"),
         ];
-        let opt = MillisecondOption::for_test();
+        let opt = MillisecondOption::backward_compatible();
 
         for (k, v) in cases {
             assert_eq!(
@@ -234,16 +237,18 @@ mod tests {
     }
     #[test]
     fn should_split_from_micros() {
-        let x = Millisecond::from_micros(1).pretty_with(MillisecondOption::for_test());
+        let x = Millisecond::from_micros(1).pretty_with(MillisecondOption::backward_compatible());
         assert_eq!(x, "1µs");
-        let x = Millisecond::from_micros(1_800).pretty_with(MillisecondOption::for_test());
+        let x =
+            Millisecond::from_micros(1_800).pretty_with(MillisecondOption::backward_compatible());
         assert_eq!(x, "1ms 800µs");
     }
     #[test]
     fn should_split_from_nanos() {
-        let x = Millisecond::from_nanos(1).pretty_with(MillisecondOption::for_test());
+        let x = Millisecond::from_nanos(1).pretty_with(MillisecondOption::backward_compatible());
         assert_eq!(x, "1ns");
-        let x = Millisecond::from_nanos(1_800).pretty_with(MillisecondOption::for_test());
+        let x =
+            Millisecond::from_nanos(1_800).pretty_with(MillisecondOption::backward_compatible());
         assert_eq!(x, "1µs 800ns");
     }
     #[test]
