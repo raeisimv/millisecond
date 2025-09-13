@@ -117,13 +117,16 @@ pub enum SecondsOptions {
     Hide,
 }
 impl SecondsOptions {
+    /// Returns the precision for the milliseconds part considering the fixed width option.
     pub fn precision(&self) -> u8 {
         let p = match self {
             Self::CombineWith { precision, .. } => (*precision).clamp(1, 3),
             _ => 1,
         };
-        if self.is_fixed_width() { p.max(3) } else { p }
+        if self.is_fixed_width() { p.min(3) } else { p }
     }
+
+    /// Returns whether the seconds and milliseconds parts should be displayed with a fixed width.
     pub fn is_fixed_width(&self) -> bool {
         match self {
             Self::CombineWith { fixed_width, .. } => *fixed_width,
