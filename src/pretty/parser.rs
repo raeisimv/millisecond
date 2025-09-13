@@ -2,7 +2,7 @@ use alloc::{string::String, vec::Vec};
 use core::time::Duration;
 
 use crate::pretty::{
-    MillisecondOption,
+    MillisecondOption, SecondsOptions,
     text_gen::{get_part_long_label, get_part_short_label},
 };
 
@@ -13,6 +13,7 @@ pub enum MillisecondPart {
     Hours(u8),
     Minutes(u8),
     Seconds(u8),
+    SecondsAndMs(u8, u16),
     Millis(u16),
     Micros(u16),
     Nanos(u16),
@@ -85,6 +86,33 @@ pub fn parse_duration(dur: &Duration, opt: &MillisecondOption) -> [Option<Millis
                     }
                 }
             }
+        }
+    }
+
+    match opt.seconds {
+        SecondsOptions::Combine | SecondsOptions::CombineWith { .. } => {
+            let secs = if let Some(MillisecondPart::Seconds(secs)) = parts[4] {
+                parts[4] = None;
+                secs
+            } else {
+                0
+            };
+            let millis = if let Some(MillisecondPart::Millis(millis)) = parts[5] {
+                parts[5] = None;
+                millis
+            } else {
+                0
+            };
+            if secs != 0 || millis != 0 {
+                parts[4] = Some(MillisecondPart::SecondsAndMs(secs, millis));
+            }
+        }
+        SecondsOptions::Separate => {
+            // do nothing it is already separated
+        }
+        SecondsOptions::Hide => {
+            parts[4] = None;
+            parts[5] = None;
         }
     }
 
@@ -183,10 +211,7 @@ mod tests {
             ),
         ];
 
-        let opt = MillisecondOption {
-            format_sub_milliseconds: true,
-            ..MillisecondOption::default()
-        };
+        let opt = MillisecondOption::backward_compatible();
         for (dur, exp) in cases.iter() {
             let parts = parse_duration(dur, &opt);
             assert_eq!(parts, *exp);
@@ -353,10 +378,7 @@ mod tests {
             ),
         ];
 
-        let opt = MillisecondOption {
-            format_sub_milliseconds: true,
-            ..MillisecondOption::default()
-        };
+        let opt = MillisecondOption::backward_compatible();
         for (dur, exp) in cases.iter() {
             let parts = parse_duration(dur, &opt);
             assert_eq!(parts, *exp);
@@ -410,14 +432,10 @@ mod tests {
             ),
         ];
 
-        let opt_short = MillisecondOption {
-            format_sub_milliseconds: true,
-            ..MillisecondOption::default()
-        };
+        let opt_short = MillisecondOption::backward_compatible();
         let opt_long = MillisecondOption {
-            format_sub_milliseconds: true,
             long: true,
-            ..MillisecondOption::default()
+            ..opt_short
         };
 
         for (test, exp_short, exp_long) in test_cases.iter() {
@@ -436,13 +454,12 @@ mod tests {
             (Duration::from_secs(23 * 60 * 60), "23h"),
         ];
 
-        for (test, exp) in test_cases.iter() {
-            let opt = MillisecondOption {
-                days_instead_of_years: true,
-                format_sub_milliseconds: true,
-                ..MillisecondOption::default()
-            };
+        let opt = MillisecondOption {
+            days_instead_of_years: true,
+            ..MillisecondOption::backward_compatible()
+        };
 
+        for (test, exp) in test_cases.iter() {
             let act = ms_parts_to_string(&parse_duration(test, &opt), &opt);
             assert_eq!(&act, exp);
         }
@@ -468,8 +485,7 @@ mod tests {
         for (test, exp) in test_cases.iter() {
             let opt = MillisecondOption {
                 dominant_only: true,
-                format_sub_milliseconds: true,
-                ..MillisecondOption::default()
+                ..MillisecondOption::backward_compatible()
             };
 
             let act = ms_parts_to_string(&parse_duration(test, &opt), &opt);
@@ -479,7 +495,7 @@ mod tests {
         let opt = MillisecondOption {
             dominant_only: true,
             days_instead_of_years: true,
-            ..MillisecondOption::default()
+            ..MillisecondOption::backward_compatible()
         };
         assert_eq!(
             "366d",

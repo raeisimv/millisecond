@@ -56,6 +56,10 @@ pub struct MillisecondOption {
 
     /// When activated, shows and formats microseconds and nanoseconds.
     pub format_sub_milliseconds: bool,
+
+    /// Determines how seconds and milliseconds should be formatted.
+    /// Default is `Combine`, which combines seconds and milliseconds into a single float number with precision of 1.
+    pub seconds: SecondsOptions,
 }
 
 impl MillisecondOption {
@@ -70,6 +74,63 @@ impl MillisecondOption {
         Self {
             format_sub_milliseconds: true,
             ..Default::default()
+        }
+    }
+
+    #[cfg(test)]
+    pub(crate) fn backward_compatible() -> Self {
+        Self {
+            format_sub_milliseconds: true,
+            seconds: SecondsOptions::Separate,
+            ..Self::default()
+        }
+    }
+}
+
+/// Options for formatting seconds and milliseconds; either combined or separated.
+#[derive(Debug, Copy, Clone, Default)]
+pub enum SecondsOptions {
+    /// Separates seconds and milliseconds into two single digits.
+    /// Example: 1s 2ms
+    #[default]
+    Separate,
+
+    /// Combines seconds and milliseconds into a single float value.
+    /// Example: 1.2s
+    Combine,
+
+    /// Combines seconds and milliseconds into a single float value with custom settings.
+    /// Example: 1.23s or 01.230s
+    CombineWith {
+        /// Determines the number of digits to show for the milliseconds part.
+        /// The default is 1, and the maximum is 3.
+        /// Other values are rounded to the specified range.
+        precision: u8,
+
+        /// Determines whether milliseconds should be displayed with a fixed width.
+        /// If true, seconds are always displayed with a fixed width of 2 digits,
+        /// and milliseconds with a fixed width based on the `precision` option.
+        fixed_width: bool,
+    },
+
+    /// Hides seconds and milliseconds
+    Hide,
+}
+impl SecondsOptions {
+    /// Returns the precision for the milliseconds part considering the fixed width option.
+    pub fn precision(&self) -> u8 {
+        let p = match self {
+            Self::CombineWith { precision, .. } => (*precision).clamp(1, 3),
+            _ => 1,
+        };
+        if self.is_fixed_width() { p.min(3) } else { p }
+    }
+
+    /// Returns whether the seconds and milliseconds parts should be displayed with a fixed width.
+    pub fn is_fixed_width(&self) -> bool {
+        match self {
+            Self::CombineWith { fixed_width, .. } => *fixed_width,
+            _ => false,
         }
     }
 }

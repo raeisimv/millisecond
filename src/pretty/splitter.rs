@@ -93,7 +93,7 @@ impl Millisecond {
     /// use millisecond::prelude::*;
     /// let ms = Millisecond::from_millis(1_800);
     ///
-    /// assert_eq!(ms.pretty_with(MillisecondOption::sub_milliseconds()), "1s 800ms")
+    /// assert_eq!(ms.pretty(), "1s 800ms")
     /// ```
     pub fn from_millis(millis: u64) -> Self {
         Duration::from_millis(millis).into()
@@ -181,7 +181,10 @@ mod tests {
     #[test]
     fn should_split_from_millis_basic() {
         let x = Millisecond::from_millis(10_123);
-        assert_eq!(x.pretty(), "10s 123ms");
+        assert_eq!(
+            x.pretty_with(MillisecondOption::backward_compatible()),
+            "10s 123ms"
+        );
     }
     #[test]
     fn should_split_from_millis() {
@@ -206,30 +209,46 @@ mod tests {
             (9007199254740991, "285616y 151d 8h 59m 991ms"), // "285616y 151d 8h 59m 0.9s"
             (u64::MAX, "584942417y 129d 14h 25m 51s 615ms"),
         ];
+        let opt = MillisecondOption::backward_compatible();
+
         for (k, v) in cases {
-            assert_eq!(Millisecond::from_millis(k).pretty(), v, "from_millis ({k})");
+            assert_eq!(
+                Millisecond::from_millis(k).pretty_with(opt),
+                v,
+                "from_millis ({k})"
+            );
 
             if let Some(x) = k.checked_mul(1_000) {
-                assert_eq!(Millisecond::from_micros(x).pretty(), v, "from_micros ({k})");
+                assert_eq!(
+                    Millisecond::from_micros(x).pretty_with(opt),
+                    v,
+                    "from_micros ({k})"
+                );
             }
 
             if let Some(x) = k.checked_mul(1_000_000) {
-                assert_eq!(Millisecond::from_nanos(x).pretty(), v, "from_nanos ({k})");
+                assert_eq!(
+                    Millisecond::from_nanos(x).pretty_with(opt),
+                    v,
+                    "from_nanos ({k})"
+                );
             }
         }
     }
     #[test]
     fn should_split_from_micros() {
-        let x = Millisecond::from_micros(1).pretty_with(MillisecondOption::sub_milliseconds());
+        let x = Millisecond::from_micros(1).pretty_with(MillisecondOption::backward_compatible());
         assert_eq!(x, "1µs");
-        let x = Millisecond::from_micros(1_800).pretty_with(MillisecondOption::sub_milliseconds());
+        let x =
+            Millisecond::from_micros(1_800).pretty_with(MillisecondOption::backward_compatible());
         assert_eq!(x, "1ms 800µs");
     }
     #[test]
     fn should_split_from_nanos() {
-        let x = Millisecond::from_nanos(1).pretty_with(MillisecondOption::sub_milliseconds());
+        let x = Millisecond::from_nanos(1).pretty_with(MillisecondOption::backward_compatible());
         assert_eq!(x, "1ns");
-        let x = Millisecond::from_nanos(1_800).pretty_with(MillisecondOption::sub_milliseconds());
+        let x =
+            Millisecond::from_nanos(1_800).pretty_with(MillisecondOption::backward_compatible());
         assert_eq!(x, "1µs 800ns");
     }
     #[test]
