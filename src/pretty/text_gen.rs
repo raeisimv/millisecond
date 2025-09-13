@@ -1,7 +1,4 @@
-use alloc::{
-    format,
-    string::{String, ToString},
-};
+use alloc::{format, string::String};
 
 use crate::{MillisecondOption, pretty::MillisecondPart};
 
@@ -42,7 +39,9 @@ pub(crate) fn get_part_long_label(part: &MillisecondPart, opt: &MillisecondOptio
                 format!("{x} second")
             }
         }
-        MillisecondPart::SecondsAndMs(secs, millis) => combine_secs_and_millis(*secs, *millis, opt),
+        MillisecondPart::SecondsAndMs(secs, millis) => {
+            format!("{} seconds", combine_secs_and_millis(*secs, *millis, opt))
+        }
         MillisecondPart::Millis(x) => {
             if *x != 1 {
                 format!("{x} milliseconds")
@@ -73,7 +72,9 @@ pub(crate) fn get_part_short_label(part: &MillisecondPart, opt: &MillisecondOpti
         MillisecondPart::Hours(x) => format!("{x}h"),
         MillisecondPart::Minutes(x) => format!("{x}m"),
         MillisecondPart::Seconds(x) => format!("{x}s"),
-        MillisecondPart::SecondsAndMs(secs, millis) => combine_secs_and_millis(*secs, *millis, opt),
+        MillisecondPart::SecondsAndMs(secs, millis) => {
+            format!("{}s", combine_secs_and_millis(*secs, *millis, opt))
+        }
         MillisecondPart::Millis(x) => format!("{x}ms"),
         MillisecondPart::Micros(x) => format!("{x}µs"),
         MillisecondPart::Nanos(x) => format!("{x}ns"),
@@ -81,25 +82,22 @@ pub(crate) fn get_part_short_label(part: &MillisecondPart, opt: &MillisecondOpti
 }
 
 fn combine_secs_and_millis(secs: u8, millis: u16, opt: &MillisecondOption) -> String {
-    let long = opt.long;
-    if millis == 0 {
-        if long {
-            format!("{} seconds", secs)
-        } else {
-            format!("{}s", secs)
-        }
-    } else if secs == 0 {
-        if long {
-            format!("{} milliseconds", millis)
-        } else {
-            format!("{}ms", millis)
-        }
+    let secs_str = if opt.seconds.is_fixed_width() {
+        format!("{secs:0>2}")
     } else {
-        let no = format!("{}.{}", secs, millis.to_string().get(..1).unwrap_or("0"));
-        if long {
-            format!("{} seconds", no)
-        } else {
-            format!("{}s", no)
-        }
-    }
+        format!("{}", secs)
+    };
+
+    let millis_str = if opt.seconds.is_fixed_width() {
+        format!("{millis:0<3}")
+    } else {
+        format!("{}", millis)
+    };
+
+    let precision = opt.seconds.precision() as _;
+    format!(
+        "{}.{}",
+        secs_str,
+        millis_str.get(..precision).unwrap_or("0")
+    )
 }

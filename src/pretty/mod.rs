@@ -14,14 +14,14 @@ mod tests {
     use super::*;
 
     #[test]
-    fn should_have_separate_millisecond() {
-        assert_eq!(Millisecond::from_millis(1100).pretty(), "1.1s");
+    fn should_separate_and_combine_milliseconds() {
+        assert_eq!(Millisecond::from_millis(1100).pretty(), "1s 100ms");
         assert_eq!(
             Millisecond::from_millis(1100).pretty_with(MillisecondOption {
-                seconds: SecondsOptions::Separate,
+                seconds: SecondsOptions::Combine,
                 ..Default::default()
             }),
-            "1s 100ms"
+            "1.1s"
         );
     }
 }

@@ -93,7 +93,7 @@ impl Millisecond {
     /// use millisecond::prelude::*;
     /// let ms = Millisecond::from_millis(1_800);
     ///
-    /// assert_eq!(ms.pretty(), "1.8s")
+    /// assert_eq!(ms.pretty(), "1s 800ms")
     /// ```
     pub fn from_millis(millis: u64) -> Self {
         Duration::from_millis(millis).into()

@@ -90,7 +90,11 @@ impl MillisecondOption {
 /// Options for formatting seconds and milliseconds; either combined or separated.
 #[derive(Debug, Copy, Clone, Default)]
 pub enum SecondsOptions {
+    /// Separates seconds and milliseconds into two single digits.
+    /// Example: 1s 2ms
     #[default]
+    Separate,
+
     /// Combines seconds and milliseconds into a single float value.
     /// Example: 1.2s
     Combine,
@@ -109,10 +113,20 @@ pub enum SecondsOptions {
         fixed_width: bool,
     },
 
-    /// Separates seconds and milliseconds into two single digits.
-    /// Example: 1s 2ms
-    Separate,
-
     /// Hides seconds and milliseconds
     Hide,
+}
+impl SecondsOptions {
+    pub fn precision(&self) -> u8 {
+        match self {
+            Self::CombineWith { precision, .. } => (*precision).clamp(1, 3),
+            _ => 1,
+        }
+    }
+    pub fn is_fixed_width(&self) -> bool {
+        match self {
+            Self::CombineWith { fixed_width, .. } => *fixed_width,
+            _ => false,
+        }
+    }
 }
