@@ -118,10 +118,11 @@ pub enum SecondsOptions {
 }
 impl SecondsOptions {
     pub fn precision(&self) -> u8 {
-        match self {
+        let p = match self {
             Self::CombineWith { precision, .. } => (*precision).clamp(1, 3),
             _ => 1,
-        }
+        };
+        if self.is_fixed_width() { p.max(3) } else { p }
     }
     pub fn is_fixed_width(&self) -> bool {
         match self {

@@ -83,17 +83,12 @@ pub(crate) fn get_part_short_label(part: &MillisecondPart, opt: &MillisecondOpti
 
 fn combine_secs_and_millis(secs: u8, millis: u16, opt: &MillisecondOption) -> String {
     let secs_str = if opt.seconds.is_fixed_width() {
-        format!("{secs:0>2}")
+        format!("{secs:02}")
     } else {
         format!("{}", secs)
     };
 
-    let millis_str = if opt.seconds.is_fixed_width() {
-        format!("{millis:0<3}")
-    } else {
-        format!("{}", millis)
-    };
-
+    let millis_str = format!("{millis:03}");
     let precision = opt.seconds.precision() as _;
     format!(
         "{}.{}",
