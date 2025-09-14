@@ -49,19 +49,6 @@ Customize the parser and the output format using the `MillisecondOption` struct.
 | `format_sub_milliseconds` | shows and formats microseconds and nanoseconds if present.| `1s 2ms` -> `1s 2ms 3µs 4ns` |
 | `seconds` | determines whether to display seconds and Milliseconds or not. Can be `Separate` (default), `Combine`, `CombineWith`, or `Hide`. | `1s 2ms` -> `1.2s` |
 
-*All options have default value unless specified*
-
-### Options shorthand
-
-In order to easily create a `MillisecondOption` instance, you can use the `MillisecondOption::default()` method:
-
-```
-let option = MillisecondOption {
-days_instead_of_years: true,
-..MillisecondOption::default ()
-};
-```
-
 ## Day of Week
 
 Calculating the weekday could be easy if the duration was calculated from a known epoch. The `weekday` function
