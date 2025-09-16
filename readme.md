@@ -39,17 +39,17 @@ fn main() {
 ## Options
 All options are represented by the `MillisecondOption` struct; which has the following fields:
 
-#### `dominant_only`
+**`dominant_only`**\
 Default: `false`\
 Example: `1y 2d` -> `1y`\
 Displays the most dominant part only (the most left part).
 
-#### `days_instead_of_years`
+**`days_instead_of_years`**\
 Default: `false`\
 Example: `1y 1d` -> `366d`\
 Displays time durations in days rather than converting them into years.
 
-#### `seconds`
+**`seconds`**\
 Default: `Separate`\
 Example: `1 second 2 milliseconds` -> `1.2 seconds`\
 An enum that determines whether to display seconds and Milliseconds.
@@ -60,19 +60,19 @@ An enum that determines whether to display seconds and Milliseconds.
     + `precision`: the number of digits to show for the milliseconds part. Default: `1`
     + `fixed_width`: whether milliseconds should be displayed with a fixed width. Default: `false`
 
-#### `format_sub_milliseconds`
+**`format_sub_milliseconds`**\
 Default: `false`\
 Example: `1s 2ms` -> `1s 2ms 3µs 4ns`\
 Displays and formats microseconds and nanoseconds if present.
 
-#### `long`
+**`long`**\
 Default: `false`\
 Example: `2 years 3 days 1 hour`\
 Displays full and descriptive labels for time units, such as `years` instead of abbreviated forms like `y`.
 
 ***
 
-## Day of Week
+### Day of Week
 Calculating the weekday could be easy if the duration was calculated from a known epoch. The `weekday` function
 is implemented to convert the duration into the proper weekday value (enum).
 
