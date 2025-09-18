@@ -39,36 +39,44 @@ fn main() {
 ## Options
 All options are represented by the `MillisecondOption` struct; which has the following fields:
 
-**`dominant_only`**\
-Default: `false`\
-Example: `1y 2d` -> `1y`\
-Displays the most dominant part only (the most left part).
+### format
+Determines whether to format the final duration string either short, long, or colon separated.\
+Example: `1h 2m 3s`\
+Type: `OutputFormat` enum\
+Default: `Short`
+- `Short`: Uses short labels. Example: `1y 17d 5h 10m 48s`
+- `Long`: Uses long labels. Example: `1 year 17 days 5 hours 10 minutes 48 seconds`
+- `Colon`: Uses no labels but colon separated values. Example: `1:17:05:10:48`
 
-**`days_instead_of_years`**\
-Default: `false`\
-Example: `1y 1d` -> `366d`\
-Displays time durations in days rather than converting them into years.
-
-**`seconds`**\
+### seconds
+Determines whether to display seconds and milliseconds; combine or separate them.\
+Example: `1 second 2 milliseconds`\
+Type: `SecondsFormat` enum\
 Default: `Separate`\
-Example: `1 second 2 milliseconds` -> `1.2 seconds`\
-An enum that determines whether to display seconds and Milliseconds.
-  + `Hide`: Hides seconds and milliseconds.
-  + `Separate`: Separates seconds and milliseconds into two single digits. Example: `1s 2ms`
-  + `Combine`: Combines seconds and milliseconds into a single float value. Example: `1.2s`
-  + `CombineWith`: Combines with custom options of:
-    + `precision`: the number of digits to show for the milliseconds part. Default: `1`
-    + `fixed_width`: whether milliseconds should be displayed with a fixed width. Default: `false`
+- `Hide`: Hides seconds and milliseconds.
+- `Separate`: Separates seconds and milliseconds into two single digits. Example: `1s 2ms`
+- `Combine`: Combines seconds and milliseconds into a single float value. Example: `1.2s`
+- `CombineWith`: Combines with custom options of:
+  - `precision`: the number of digits to show for the milliseconds part. Default: `1`
+  - `fixed_width`: whether milliseconds should be displayed with a fixed width. Default: `false`
 
-**`format_sub_milliseconds`**\
-Default: `false`\
-Example: `1s 2ms` -> `1s 2ms 3µs 4ns`\
-Displays and formats microseconds and nanoseconds if present.
+### dominant_only
+Determines whether displays the most dominant part only (the most left part).\
+Example: `1y 2d` -> `1y`\
+Type: `bool`\
+Default: `false`
 
-**`long`**\
-Default: `false`\
-Example: `2 years 3 days 1 hour`\
-Displays full and descriptive labels for time units, such as `years` instead of abbreviated forms like `y`.
+### days_instead_of_years
+Determines whether displays time durations in days rather than converting them into years.\
+Example: `1y 1d` -> `366d`\
+Type: `bool`\
+Default: `false`
+
+### format_sub_milliseconds
+Determines whether displays and formats microseconds and nanoseconds if present.\
+Example: `1s 2ms 3µs 4ns`\
+Type: `bool`\
+Default: `false`
 
 ***
 
