@@ -45,8 +45,8 @@ impl MillisecondFormatter for Duration {
 /// these processes to tailor the results according to your specific requirements.
 #[derive(Debug, Copy, Clone, Default)]
 pub struct MillisecondOption {
-    /// When enabled, uses full and descriptive labels for time units, such as `years` instead of abbreviated forms like `y`.
-    pub long: bool,
+    /// Determines the output format for the duration string.
+    pub format: OutputFormat,
 
     /// When activated, displays time durations in days rather than converting them into years.
     pub days_instead_of_years: bool,
@@ -66,14 +66,32 @@ impl MillisecondOption {
     /// Creates Options for showing a long and verbose string
     pub fn long() -> Self {
         Self {
-            long: true,
+            format: OutputFormat::Long,
             ..Default::default()
         }
     }
+
+    /// Creates options for showing a colon-separated string
+    pub fn colon() -> Self {
+        Self {
+            format: OutputFormat::Colon,
+            seconds: SecondsOptions::Combine,
+            ..Default::default()
+        }
+    }
+
+    /// Creates options to format sub-milliseconds
     pub fn sub_milliseconds() -> Self {
         Self {
             format_sub_milliseconds: true,
             ..Default::default()
+        }
+    }
+
+    pub fn get_separator(&self) -> &str {
+        match self.format {
+            OutputFormat::Colon => ":",
+            _ => " ",
         }
     }
 
@@ -133,4 +151,22 @@ impl SecondsOptions {
             _ => false,
         }
     }
+}
+
+/// Determines the output format for the duration.
+/// It can be either short, long, or colon-separated.
+/// Short: `1h 2m 3s`,
+/// Long: `1 hour, 2 minutes, 3 seconds`,
+/// Colon: `1:02:03`
+#[derive(Debug, Clone, Copy, Default)]
+pub enum OutputFormat {
+    /// Uses short labels for units with space separation.
+    #[default]
+    Short,
+
+    /// Uses long labels for units with space separation.
+    Long,
+
+    /// Uses no labels for unit with colon (:) separation.
+    Colon,
 }

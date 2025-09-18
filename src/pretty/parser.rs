@@ -2,9 +2,18 @@ use alloc::{string::String, vec::Vec};
 use core::time::Duration;
 
 use crate::pretty::{
-    MillisecondOption, SecondsOptions,
-    text_gen::{get_part_long_label, get_part_short_label},
+    MillisecondOption, OutputFormat, SecondsOptions,
+    text_gen::{get_part_colon_label, get_part_long_label, get_part_short_label},
 };
+
+const IX_YEARS: usize = 0;
+const IX_DAYS: usize = 1;
+const IX_HOURS: usize = 2;
+const IX_MINUTES: usize = 3;
+const IX_SECONDS: usize = 4;
+const IX_MILLIS: usize = 5;
+const IX_MICROS: usize = 6;
+const IX_NANOS: usize = 7;
 
 #[derive(Debug, Copy, Clone, PartialEq)]
 pub enum MillisecondPart {
@@ -34,7 +43,7 @@ pub fn parse_duration(dur: &Duration, opt: &MillisecondOption) -> [Option<Millis
         if format_sub_millis {
             let nanos = total_nanos % 1_000;
             if nanos > 0 {
-                parts[7] = Some(MillisecondPart::Nanos(nanos as _));
+                parts[IX_NANOS] = Some(MillisecondPart::Nanos(nanos as _));
             }
         }
 
@@ -43,76 +52,84 @@ pub fn parse_duration(dur: &Duration, opt: &MillisecondOption) -> [Option<Millis
             if format_sub_millis {
                 let micros = micros % 1000;
                 if micros > 0 {
-                    parts[6] = Some(MillisecondPart::Micros((micros % 1000) as _));
+                    parts[IX_MICROS] = Some(MillisecondPart::Micros((micros % 1000) as _));
                 }
             }
 
             let millis = dur.subsec_millis();
             if millis > 0 {
-                parts[5] = Some(MillisecondPart::Millis(millis as _));
+                parts[IX_MILLIS] = Some(MillisecondPart::Millis(millis as _));
             }
         }
     }
 
     let ParsedUnitValue { unit: secs, total } = ParsedUnitValue::parse_secs(dur.as_secs());
     if secs > 0 {
-        parts[4] = Some(MillisecondPart::Seconds(secs));
+        parts[IX_SECONDS] = Some(MillisecondPart::Seconds(secs));
     }
     if total > 0 {
         let ParsedUnitValue { unit: mins, total } = ParsedUnitValue::parse_mins(total);
         if mins > 0 {
-            parts[3] = Some(MillisecondPart::Minutes(mins));
+            parts[IX_MINUTES] = Some(MillisecondPart::Minutes(mins));
         }
 
         if total > 0 {
             let ParsedUnitValue { unit: hours, total } = ParsedUnitValue::parse_hours(total);
             if hours > 0 {
-                parts[2] = Some(MillisecondPart::Hours(hours));
+                parts[IX_HOURS] = Some(MillisecondPart::Hours(hours));
             }
 
             if total > 0 {
                 if opt.days_instead_of_years {
-                    parts[1] = Some(MillisecondPart::Days(total));
+                    parts[IX_DAYS] = Some(MillisecondPart::Days(total));
                 } else {
                     let ParsedUnitValue {
                         unit: days,
                         total: years,
                     } = ParsedUnitValue::parse_days(total);
                     if days > 0 {
-                        parts[1] = Some(MillisecondPart::Days(days as _));
+                        parts[IX_DAYS] = Some(MillisecondPart::Days(days as _));
                     }
                     if years > 0 {
-                        parts[0] = Some(MillisecondPart::Years(years));
+                        parts[IX_YEARS] = Some(MillisecondPart::Years(years));
                     }
                 }
             }
         }
     }
 
+    if let OutputFormat::Colon = opt.format {
+        parts[IX_MINUTES] = parts[IX_MINUTES].or(Some(MillisecondPart::Minutes(0)));
+        parts[IX_SECONDS] = parts[IX_SECONDS].or(Some(MillisecondPart::Seconds(0)));
+    }
+
     match opt.seconds {
         SecondsOptions::Combine | SecondsOptions::CombineWith { .. } => {
-            let secs = if let Some(MillisecondPart::Seconds(secs)) = parts[4] {
-                parts[4] = None;
-                secs
+            let secs = if let Some(MillisecondPart::Seconds(secs)) = parts[IX_SECONDS] {
+                parts[IX_SECONDS] = None;
+                Some(secs)
             } else {
-                0
+                None
             };
-            let millis = if let Some(MillisecondPart::Millis(millis)) = parts[5] {
-                parts[5] = None;
-                millis
+            let millis = if let Some(MillisecondPart::Millis(millis)) = parts[IX_MILLIS] {
+                parts[IX_MILLIS] = None;
+                Some(millis)
             } else {
-                0
+                None
             };
-            if secs != 0 || millis != 0 {
-                parts[4] = Some(MillisecondPart::SecondsAndMs(secs, millis));
+            if secs.is_some() || millis.is_some() {
+                parts[IX_SECONDS] = Some(MillisecondPart::SecondsAndMs(
+                    secs.unwrap_or(0),
+                    millis.unwrap_or(0),
+                ));
             }
         }
         SecondsOptions::Separate => {
             // do nothing it is already separated
         }
         SecondsOptions::Hide => {
-            parts[4] = None;
-            parts[5] = None;
+            parts[IX_SECONDS] = None;
+            parts[IX_MILLIS] = None;
         }
     }
 
@@ -122,10 +139,10 @@ pub fn parse_duration(dur: &Duration, opt: &MillisecondOption) -> [Option<Millis
 impl MillisecondPart {
     /// Converts the crate's language to human-readable string
     pub fn get_label(&self, opt: &MillisecondOption) -> String {
-        if opt.long {
-            get_part_long_label(self, opt)
-        } else {
-            get_part_short_label(self, opt)
+        match opt.format {
+            OutputFormat::Short => get_part_short_label(self, opt),
+            OutputFormat::Long => get_part_long_label(self, opt),
+            OutputFormat::Colon => get_part_colon_label(self, opt),
         }
     }
 }
@@ -143,7 +160,7 @@ pub fn ms_parts_to_string(parts: &[Option<MillisecondPart>; 8], opt: &Millisecon
         .take(take)
         .map(|x| x.unwrap().get_label(opt))
         .collect::<Vec<_>>()
-        .join(" ")
+        .join(opt.get_separator())
 }
 
 #[cfg(test)]
@@ -434,7 +451,7 @@ mod tests {
 
         let opt_short = MillisecondOption::backward_compatible();
         let opt_long = MillisecondOption {
-            long: true,
+            format: OutputFormat::Long,
             ..opt_short
         };
 

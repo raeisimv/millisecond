@@ -105,4 +105,26 @@ mod tests {
             );
         }
     }
+
+    #[test]
+    fn should_format_with_colon_notation() {
+        let cases = [
+            // Default formats
+            (1000, "0:01"),
+            (1543, "0:01.5"),
+            (1000 * 60, "1:00"),
+            (1000 * 90, "1:30"),
+            (95_543, "1:35.5"),
+            ((1000 * 60 * 10) + 543, "10:00.5"),
+            ((1000 * 60 * 59) + (1000 * 59) + 543, "59:59.5"),
+            (
+                (1000 * 60 * 60 * 15) + (1000 * 60 * 59) + (1000 * 59) + 543,
+                "15:59:59.5",
+            ),
+        ];
+        for (millis, expected) in cases {
+            let act = Millisecond::from_millis(millis).pretty_with(MillisecondOption::colon());
+            assert_eq!(act, expected,);
+        }
+    }
 }
