@@ -2,7 +2,7 @@ use alloc::{string::String, vec::Vec};
 use core::time::Duration;
 
 use crate::pretty::{
-    MillisecondOption, SecondsOptions,
+    MillisecondOption, OutputFormat, SecondsOptions,
     text_gen::{get_part_long_label, get_part_short_label},
 };
 
@@ -122,10 +122,10 @@ pub fn parse_duration(dur: &Duration, opt: &MillisecondOption) -> [Option<Millis
 impl MillisecondPart {
     /// Converts the crate's language to human-readable string
     pub fn get_label(&self, opt: &MillisecondOption) -> String {
-        if opt.long {
-            get_part_long_label(self, opt)
-        } else {
-            get_part_short_label(self, opt)
+        match opt.format {
+            OutputFormat::Short => get_part_short_label(self, opt),
+            OutputFormat::Long => get_part_long_label(self, opt),
+            OutputFormat::Colon => todo!(),
         }
     }
 }
@@ -434,7 +434,7 @@ mod tests {
 
         let opt_short = MillisecondOption::backward_compatible();
         let opt_long = MillisecondOption {
-            long: true,
+            format: OutputFormat::Long,
             ..opt_short
         };
 

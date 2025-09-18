@@ -45,8 +45,8 @@ impl MillisecondFormatter for Duration {
 /// these processes to tailor the results according to your specific requirements.
 #[derive(Debug, Copy, Clone, Default)]
 pub struct MillisecondOption {
-    /// When enabled, uses full and descriptive labels for time units, such as `years` instead of abbreviated forms like `y`.
-    pub long: bool,
+    /// Determines the output format for the duration string.
+    pub format: OutputFormat,
 
     /// When activated, displays time durations in days rather than converting them into years.
     pub days_instead_of_years: bool,
@@ -66,7 +66,7 @@ impl MillisecondOption {
     /// Creates Options for showing a long and verbose string
     pub fn long() -> Self {
         Self {
-            long: true,
+            format: OutputFormat::Long,
             ..Default::default()
         }
     }
@@ -133,4 +133,12 @@ impl SecondsOptions {
             _ => false,
         }
     }
+}
+
+#[derive(Debug, Clone, Copy, Default)]
+pub enum OutputFormat {
+    #[default]
+    Short,
+    Long,
+    Colon,
 }
