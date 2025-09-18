@@ -75,6 +75,7 @@ impl MillisecondOption {
     pub fn colon() -> Self {
         Self {
             format: OutputFormat::Colon,
+            seconds: SecondsOptions::Combine,
             ..Default::default()
         }
     }
@@ -84,6 +85,13 @@ impl MillisecondOption {
         Self {
             format_sub_milliseconds: true,
             ..Default::default()
+        }
+    }
+
+    pub fn get_separator(&self) -> &str {
+        match self.format {
+            OutputFormat::Colon => ":",
+            _ => " ",
         }
     }
 

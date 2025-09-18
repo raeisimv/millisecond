@@ -80,6 +80,19 @@ pub(crate) fn get_part_short_label(part: &MillisecondPart, opt: &MillisecondOpti
         MillisecondPart::Nanos(x) => format!("{x}ns"),
     }
 }
+pub(crate) fn get_part_colon_label(part: &MillisecondPart, _opt: &MillisecondOption) -> String {
+    match *part {
+        MillisecondPart::Years(x) => format!("{x:04}"),
+        MillisecondPart::Days(x) => format!("{x:03}"),
+        MillisecondPart::Hours(x) => format!("{x:02}"),
+        MillisecondPart::Minutes(x) => format!("{x:01}"),
+        MillisecondPart::Seconds(x) => format!("{x:02}"),
+        MillisecondPart::SecondsAndMs(secs, millis) => combine_secs_and_millis_colon(secs, millis),
+        MillisecondPart::Millis(x) => format!("{x:03}"),
+        MillisecondPart::Micros(x) => format!("{x:03}"),
+        MillisecondPart::Nanos(x) => format!("{x:03}"),
+    }
+}
 
 fn combine_secs_and_millis(secs: u8, millis: u16, opt: &MillisecondOption) -> String {
     let secs_str = if opt.seconds.is_fixed_width() {
@@ -95,4 +108,14 @@ fn combine_secs_and_millis(secs: u8, millis: u16, opt: &MillisecondOption) -> St
         secs_str,
         millis_str.get(..precision).unwrap_or("0")
     )
+}
+fn combine_secs_and_millis_colon(secs: u8, millis: u16) -> String {
+    let secs_str = format!("{secs:02}");
+    if millis == 0 {
+        return secs_str;
+    }
+
+    let millis_str = format!("{millis:03}");
+    let precision = 1;
+    format!("{}.{}", secs_str, &millis_str[..precision])
 }
