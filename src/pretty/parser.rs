@@ -149,15 +149,10 @@ impl MillisecondPart {
 
 /// Converts the crate's language tokens into the human-readable string
 pub fn ms_parts_to_string(parts: &[Option<MillisecondPart>; 8], opt: &MillisecondOption) -> String {
-    let take = if opt.dominant_only {
-        1
-    } else {
-        8 // or infinity
-    };
     parts
         .iter()
         .filter(|x| x.is_some())
-        .take(take)
+        .take(opt.get_unit_count())
         .map(|x| x.unwrap().get_label(opt))
         .collect::<Vec<_>>()
         .join(opt.get_separator())
