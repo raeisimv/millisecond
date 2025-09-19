@@ -60,6 +60,11 @@ pub struct MillisecondOption {
     /// Determines how seconds and milliseconds should be formatted.
     /// Default is `Combine`, which combines seconds and milliseconds into a single float number with precision of 1.
     pub seconds: SecondsOptions,
+
+    /// Determines the maximum number of units to display in the formatted string (from years towards nanoseconds).
+    /// Default is `None`, which means all units will be displayed.
+    /// This flag takes precedence over the `dominant_only` setting.
+    pub unit_count: Option<usize>,
 }
 
 impl MillisecondOption {
@@ -95,6 +100,11 @@ impl MillisecondOption {
             OutputFormat::Colon => ":",
             _ => " ",
         }
+    }
+
+    pub fn get_unit_count(&self) -> usize {
+        let dominant = if self.dominant_only { 1 } else { 8 };
+        self.unit_count.unwrap_or(dominant).clamp(1, 8)
     }
 
     #[cfg(test)]

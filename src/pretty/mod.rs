@@ -127,4 +127,24 @@ mod tests {
             assert_eq!(act, expected,);
         }
     }
+    #[test]
+    fn should_count_units() {
+        let cases = [
+            (1000 * 60, 0, "1m"),
+            (1000 * 60, 1, "1m"),
+            (1000 * 60 * 67, 1, "1h"),
+            (1000 * 60 * 67, 2, "1h 7m"),
+            (1000 * 60 * 67 * 24 * 465, 1, "1y"),
+            (1000 * 60 * 67 * 24 * 465, 2, "1y 154d"),
+            (1000 * 60 * 67 * 24 * 465, 3, "1y 154d 6h"),
+        ];
+        for (millis, unit_count, expected) in cases {
+            let opt = MillisecondOption {
+                unit_count: Some(unit_count),
+                ..Default::default()
+            };
+            let act = Millisecond::from_millis(millis).pretty_with(opt);
+            assert_eq!(act, expected);
+        }
+    }
 }
