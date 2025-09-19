@@ -51,7 +51,7 @@ pub struct MillisecondOption {
     /// When activated, displays time durations in days rather than converting them into years.
     pub days_instead_of_years: bool,
 
-    /// When activated, displays the most dominant part only (the most left part).
+    /// When activated, displays the most dominant part only (the most left part) and produces a compact string.
     pub dominant_only: bool,
 
     /// When activated, shows and formats microseconds and nanoseconds.
@@ -76,6 +76,8 @@ impl MillisecondOption {
         Self {
             format: OutputFormat::Colon,
             seconds: SecondsOptions::Combine,
+            format_sub_milliseconds: false,
+            dominant_only: false,
             ..Default::default()
         }
     }
@@ -167,6 +169,7 @@ pub enum OutputFormat {
     /// Uses long labels for units with space separation.
     Long,
 
-    /// Uses no labels for unit with colon (:) separation.
+    /// Uses no labels for unit with colon (:) separation. Always shows time in at least minutes: 1s → 0:01.
+    /// Useful when you want to display time without the time units, similar to a digital watch.
     Colon,
 }
