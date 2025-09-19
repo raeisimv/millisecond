@@ -61,10 +61,18 @@ Default: `Separate`\
   - `fixed_width`: whether milliseconds should be displayed with a fixed width. Default: `false`
 
 ### dominant_only
-Determines whether displays the most dominant part only (the most left part).\
+Determines whether displays the most dominant part only (the most left part). The `unit_count` flag takes precedence over this setting.\
 Example: `1y 2d` -> `1y`\
 Type: `bool`\
 Default: `false`
+
+### unit_count
+Determines the maximum number of units to display in the formatted string (from years towards nanoseconds).
+Default is `None`, which means all units will be displayed.
+This flag takes precedence over the `dominant_only` setting.\
+Example: `1y 2d 3h` -> `1y 2d`\
+Type: `Option<usize>`\
+Default: `None`
 
 ### days_instead_of_years
 Determines whether displays time durations in days rather than converting them into years.\
