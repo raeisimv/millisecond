@@ -105,7 +105,6 @@ mod tests {
             );
         }
     }
-
     #[test]
     fn should_format_with_colon_notation() {
         let cases = [
@@ -141,6 +140,21 @@ mod tests {
         for (millis, unit_count, expected) in cases {
             let opt = MillisecondOption {
                 unit_count: Some(unit_count),
+                ..Default::default()
+            };
+            let act = Millisecond::from_millis(millis).pretty_with(opt);
+            assert_eq!(act, expected);
+        }
+    }
+    #[test]
+    fn should_separate_seconds_and_milliseconds() {
+        let cases = [
+            (1100, SecondsOptions::Combine, "1.1s"),
+            (1100, SecondsOptions::Separate, "1s 100ms"),
+        ];
+        for (millis, seconds_option, expected) in cases {
+            let opt = MillisecondOption {
+                seconds: seconds_option,
                 ..Default::default()
             };
             let act = Millisecond::from_millis(millis).pretty_with(opt);
