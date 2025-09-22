@@ -85,7 +85,7 @@ pub(crate) fn get_part_colon_label(part: &MillisecondPart, _opt: &MillisecondOpt
         MillisecondPart::Years(x) => format!("{x:04}"),
         MillisecondPart::Days(x) => format!("{x:03}"),
         MillisecondPart::Hours(x) => format!("{x:02}"),
-        MillisecondPart::Minutes(x) => format!("{x:01}"),
+        MillisecondPart::Minutes(x) => format!("{x:02}"),
         MillisecondPart::Seconds(x) => format!("{x:02}"),
         MillisecondPart::SecondsAndMs(secs, millis) => combine_secs_and_millis_colon(secs, millis),
         MillisecondPart::Millis(x) => format!("{x:03}"),
