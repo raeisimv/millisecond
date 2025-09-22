@@ -1,4 +1,7 @@
-use alloc::{string::String, vec::Vec};
+use alloc::{
+    string::{String, ToString},
+    vec::Vec,
+};
 use core::time::Duration;
 
 use crate::pretty::{
@@ -149,13 +152,24 @@ impl MillisecondPart {
 
 /// Converts the crate's language tokens into the human-readable string
 pub fn ms_parts_to_string(parts: &[Option<MillisecondPart>; 8], opt: &MillisecondOption) -> String {
-    parts
+    let output = parts
         .iter()
         .filter(|x| x.is_some())
         .take(opt.get_unit_count())
         .map(|x| x.unwrap().get_label(opt))
         .collect::<Vec<_>>()
-        .join(opt.get_separator())
+        .join(opt.get_separator());
+
+    if opt.seconds.is_fixed_width() {
+        return output;
+    }
+
+    let output = output.trim_start_matches('0').to_string();
+    if output.starts_with(|x| !char::is_digit(x, 10)) {
+        alloc::format!("0{output}")
+    } else {
+        output
+    }
 }
 
 #[cfg(test)]
