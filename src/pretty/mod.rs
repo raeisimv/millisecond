@@ -161,4 +161,23 @@ mod tests {
             assert_eq!(act, expected);
         }
     }
+    #[test]
+    fn should_long_option_works_with_unit_count() {
+        let cases = [
+            (1000 * 60, 1, "1 minute"),
+            (1000 * 60 * 67, 1, "1 hour"),
+            (1000 * 60 * 67, 2, "1 hour 7 minutes"),
+            (1000 * 60 * 67 * 24 * 465, 1, "1 year"),
+            (1000 * 60 * 67 * 24 * 465, 2, "1 year 154 days"),
+            (1000 * 60 * 67 * 24 * 465, 3, "1 year 154 days 6 hours"),
+        ];
+        for (millis, unit_count, expected) in cases {
+            let opt = MillisecondOption {
+                unit_count: Some(unit_count),
+                ..MillisecondOption::long()
+            };
+            let act = Millisecond::from_millis(millis).pretty_with(opt);
+            assert_eq!(act, expected);
+        }
+    }
 }
