@@ -65,6 +65,10 @@ pub struct MillisecondOption {
     /// Default is `None`, which means all units will be displayed.
     /// This flag takes precedence over the `dominant_only` setting.
     pub unit_count: Option<usize>,
+
+    /// Determines the separator used between different parts of the formatted string.
+    /// Default is `Space` allowing other options to override it, e.g. `format: Colon` would replace it with a colon.
+    pub separator: Separator,
 }
 
 impl MillisecondOption {
@@ -96,9 +100,12 @@ impl MillisecondOption {
     }
 
     pub fn get_separator(&self) -> &str {
-        match self.format {
-            OutputFormat::Colon => ":",
-            _ => " ",
+        match self.separator {
+            Separator::Default => match self.format {
+                OutputFormat::Colon => ":",
+                _ => self.separator.as_ref(),
+            },
+            _ => self.separator.as_ref(),
         }
     }
 
@@ -182,4 +189,39 @@ pub enum OutputFormat {
     /// Uses no labels for unit with colon (:) separation. Always shows time in at least minutes: 1s → 0:01.
     /// Useful when you want to display time without the time units, similar to a digital watch.
     Colon,
+}
+
+#[derive(Debug, Clone, Copy, Default)]
+pub enum Separator {
+    /// A space, allowing other options overwriting it.
+    #[default]
+    Default,
+    /// A space
+    Space,
+    /// A colon (:)
+    SingleColon,
+    /// A comma (,)
+    Comma,
+    /// A dash (-)
+    Dash,
+    /// A slash (/)
+    Slash,
+    /// A pipe (|)
+    Pipe,
+    /// An underscore (_)
+    Underscore,
+}
+impl AsRef<str> for Separator {
+    fn as_ref(&self) -> &str {
+        match self {
+            Self::Default => " ",
+            Self::Space => " ",
+            Self::SingleColon => ":",
+            Self::Comma => ",",
+            Self::Dash => "-",
+            Self::Slash => "/",
+            Self::Pipe => "|",
+            Self::Underscore => "_",
+        }
+    }
 }

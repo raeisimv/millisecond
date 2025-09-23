@@ -180,4 +180,31 @@ mod tests {
             assert_eq!(act, expected);
         }
     }
+    #[test]
+    fn should_customize_separator() {
+        use crate::pretty::OutputFormat::*;
+        use crate::pretty::Separator::*;
+
+        let cases = [
+            (1000 * 60 * 67 * 24 * 465, Short, Default, "1y 154d 6h"),
+            (1000 * 60 * 67 * 24 * 465, Colon, Default, "1:154:06:00:00"), // based on the format flag
+            (1000 * 60 * 67 * 24 * 465, Short, Space, "1y 154d 6h"),
+            (1000 * 60 * 67 * 24 * 465, Colon, Space, "1 154 06 00 00"), // overrides colon with space
+            (1000 * 60 * 67 * 24 * 465, Colon, Dash, "1-154-06-00-00"), // overrides colon with a dash
+            (1000 * 60 * 67 * 24 * 465, Short, SingleColon, "1y:154d:6h"),
+            (1000 * 60 * 67 * 24 * 465, Short, Comma, "1y,154d,6h"),
+            (1000 * 60 * 67 * 24 * 465, Short, Dash, "1y-154d-6h"),
+            (1000 * 60 * 67 * 24 * 465, Short, Pipe, "1y|154d|6h"),
+            (1000 * 60 * 67 * 24 * 465, Short, Underscore, "1y_154d_6h"),
+        ];
+        for (millis, format, separator, expected) in cases {
+            let opt = MillisecondOption {
+                format,
+                separator,
+                ..MillisecondOption::default()
+            };
+            let act = Millisecond::from_millis(millis).pretty_with(opt);
+            assert_eq!(act, expected);
+        }
+    }
 }
