@@ -100,8 +100,11 @@ impl MillisecondOption {
     }
 
     pub fn get_separator(&self) -> &str {
-        match self.format {
-            OutputFormat::Colon => ":",
+        match self.separator {
+            Separator::Default => match self.format {
+                OutputFormat::Colon => ":",
+                _ => self.separator.as_ref(),
+            },
             _ => self.separator.as_ref(),
         }
     }

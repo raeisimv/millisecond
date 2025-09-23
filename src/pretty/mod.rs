@@ -180,7 +180,6 @@ mod tests {
             assert_eq!(act, expected);
         }
     }
-    #[ignore = "for test"]
     #[test]
     fn should_customize_separator() {
         use crate::pretty::OutputFormat::*;
@@ -188,9 +187,10 @@ mod tests {
 
         let cases = [
             (1000 * 60 * 67 * 24 * 465, Short, Default, "1y 154d 6h"),
-            (1000 * 60 * 67 * 24 * 465, Colon, Default, "1y:154d:6h"), // override
+            (1000 * 60 * 67 * 24 * 465, Colon, Default, "1:154:06:00:00"), // based on the format flag
             (1000 * 60 * 67 * 24 * 465, Short, Space, "1y 154d 6h"),
-            (1000 * 60 * 67 * 24 * 465, Colon, Space, "1y 154d 6h"), // do not override
+            (1000 * 60 * 67 * 24 * 465, Colon, Space, "1 154 06 00 00"), // overrides colon with space
+            (1000 * 60 * 67 * 24 * 465, Colon, Dash, "1-154-06-00-00"), // overrides colon with a dash
             (1000 * 60 * 67 * 24 * 465, Short, SingleColon, "1y:154d:6h"),
             (1000 * 60 * 67 * 24 * 465, Short, Comma, "1y,154d,6h"),
             (1000 * 60 * 67 * 24 * 465, Short, Dash, "1y-154d-6h"),
