@@ -86,6 +86,22 @@ Example: `1s 2ms 3µs 4ns`\
 Type: `bool`\
 Default: `false`
 
+### separator
+Determines the separator between units. The default value is a `Space` but can be overridden, e.g. in colon notation `Default` gets converted to `Colon` but `Space` stands persisted. \
+Example: `1y 2d` -> `1y-2d`\
+Type: `Separator` enum\
+Default: `Separator::Default`
+- `Separator::Default`: Displays units a space as separator. Example: `1y 2d`
+- `Separator::None`: Displays units without a separator. Example: `1y2d`
+- `Separator::Space`: Displays units with a space as separator. Example: `1y 2d`
+- `Separator::SingleColon`: Displays units with a colon as separator. Example: `1y:2d`
+- `Separator::Comma`: Displays units with a comma as separator. Example: `1y,2d`
+- `Separator::Dash`: Displays units with a dash as separator. Example: `1y-2d`
+- `Separator::Slash`: Displays units with a slash as separator. Example: `1y/2d`
+- `Separator::Pipe`: Displays units with a pipe as separator. Example: `1y|2d`
+- `Separator::Underscore`: Displays units with an underscore as separator. Example: `1y_2d`
+
+
 ***
 
 ### Day of Week
