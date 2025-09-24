@@ -196,6 +196,8 @@ pub enum Separator {
     /// A space, allowing other options overwriting it.
     #[default]
     Default,
+    /// No separator
+    None,
     /// A space
     Space,
     /// A colon (:)
@@ -215,6 +217,7 @@ impl AsRef<str> for Separator {
     fn as_ref(&self) -> &str {
         match self {
             Self::Default => " ",
+            Self::None => "",
             Self::Space => " ",
             Self::SingleColon => ":",
             Self::Comma => ",",
