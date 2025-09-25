@@ -44,7 +44,7 @@ impl MillisecondFormatter for Duration {
 /// the final formatted output. It allows you to customize the behavior and settings used during
 /// these processes to tailor the results according to your specific requirements.
 #[derive(Debug, Copy, Clone, Default)]
-pub struct MillisecondOption {
+pub struct MillisecondOption<'a> {
     /// Determines the output format for the duration string.
     pub format: OutputFormat,
 
@@ -68,10 +68,10 @@ pub struct MillisecondOption {
 
     /// Determines the separator used between different parts of the formatted string.
     /// Default is `Space` allowing other options to override it, e.g. `format: Colon` would replace it with a colon.
-    pub separator: Separator,
+    pub separator: Separator<'a>,
 }
 
-impl MillisecondOption {
+impl<'a> MillisecondOption<'a> {
     /// Creates Options for showing a long and verbose string
     pub fn long() -> Self {
         Self {
@@ -192,7 +192,7 @@ pub enum OutputFormat {
 }
 
 #[derive(Debug, Clone, Copy, Default)]
-pub enum Separator {
+pub enum Separator<'a> {
     /// A space, allowing other options overwriting it.
     #[default]
     Default,
@@ -200,31 +200,19 @@ pub enum Separator {
     None,
     /// A space
     Space,
-    /// A colon (:)
-    SingleColon,
-    /// A comma (,)
-    Comma,
     /// A dash (-)
     Dash,
-    /// A slash (/)
-    Slash,
-    /// A pipe (|)
-    Pipe,
-    /// An underscore (_)
-    Underscore,
+    /// A custom separator
+    Custom(&'a str),
 }
-impl AsRef<str> for Separator {
+impl<'a> AsRef<str> for Separator<'a> {
     fn as_ref(&self) -> &str {
         match self {
             Self::Default => " ",
-            Self::None => "",
             Self::Space => " ",
-            Self::SingleColon => ":",
-            Self::Comma => ",",
+            Self::None => "",
             Self::Dash => "-",
-            Self::Slash => "/",
-            Self::Pipe => "|",
-            Self::Underscore => "_",
+            Self::Custom(x) => x,
         }
     }
 }

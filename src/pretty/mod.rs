@@ -192,11 +192,8 @@ mod tests {
             (1000 * 60 * 67 * 24 * 465, Colon, Space, "1 154 06 00 00"), // overrides colon with space
             (1000 * 60 * 67 * 24 * 465, Short, None, "1y154d6h"),
             (1000 * 60 * 67 * 24 * 465, Colon, Dash, "1-154-06-00-00"), // overrides colon with a dash
-            (1000 * 60 * 67 * 24 * 465, Short, SingleColon, "1y:154d:6h"),
-            (1000 * 60 * 67 * 24 * 465, Short, Comma, "1y,154d,6h"),
             (1000 * 60 * 67 * 24 * 465, Short, Dash, "1y-154d-6h"),
-            (1000 * 60 * 67 * 24 * 465, Short, Pipe, "1y|154d|6h"),
-            (1000 * 60 * 67 * 24 * 465, Short, Underscore, "1y_154d_6h"),
+            (1000 * 60 * 67 * 24 * 465, Short, Custom("%"), "1y%154d%6h"),
         ];
         for (millis, format, separator, expected) in cases {
             let opt = MillisecondOption {
