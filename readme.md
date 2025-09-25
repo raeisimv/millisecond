@@ -94,13 +94,8 @@ Default: `Separator::Default`
 - `Default`: Displays units a space as separator. Example: `1y 2d`
 - `None`: Displays units without a separator. Example: `1y2d`
 - `Space`: Displays units with a space as separator. Example: `1y 2d`
-- `SingleColon`: Displays units with a colon as separator. Example: `1y:2d`
-- `Comma`: Displays units with a comma as separator. Example: `1y,2d`
 - `Dash`: Displays units with a dash as separator. Example: `1y-2d`
-- `Slash`: Displays units with a slash as separator. Example: `1y/2d`
-- `Pipe`: Displays units with a pipe as separator. Example: `1y|2d`
-- `Underscore`: Displays units with an underscore as separator. Example: `1y_2d`
-
+- `Custom(&str)`: Displays units with a custom separator. Example: `1y_custom_2d`
 
 ***
 
