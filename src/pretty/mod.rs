@@ -162,6 +162,22 @@ mod tests {
         }
     }
     #[test]
+    fn should_separate_seconds_and_millis_work_with_format_sub_millis() {
+        let cases = [
+            (1_010_340_067, "1s 10ms 340µs 67ns"),
+            ((60 * 1_000_000_000) + 34_000_000 + 5, "1m 34ms 5ns"),
+        ];
+        for (millis, expected) in cases {
+            let opt = MillisecondOption {
+                seconds: SecondsOptions::Separate,
+                format_sub_milliseconds: true,
+                ..Default::default()
+            };
+            let act = Millisecond::from_nanos(millis).pretty_with(opt);
+            assert_eq!(act, expected);
+        }
+    }
+    #[test]
     fn should_long_option_works_with_unit_count() {
         let cases = [
             (1000 * 60, 1, "1 minute"),
