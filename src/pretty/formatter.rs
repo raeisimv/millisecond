@@ -140,9 +140,9 @@ pub enum SecondsOptions {
     /// Example: 1.23s or 01.230s
     CombineWith {
         /// Determines the number of digits to show for the milliseconds part.
-        /// The default is 1, and the maximum is 3.
+        /// The default is 1, and the maximum is 3, and 0 eliminates milliseconds.
         /// Other values are rounded to the specified range.
-        precision: u8,
+        precision: Option<u8>,
 
         /// Determines whether milliseconds should be displayed with a fixed width.
         /// If true, seconds are always displayed with a fixed width of 2 digits,
@@ -157,7 +157,7 @@ impl SecondsOptions {
     /// Returns the precision for the milliseconds part considering the fixed width option.
     pub fn precision(&self) -> u8 {
         let p = match self {
-            Self::CombineWith { precision, .. } => (*precision).clamp(1, 3),
+            Self::CombineWith { precision, .. } => (*precision).unwrap_or(1).clamp(0, 3),
             _ => 1,
         };
         if self.is_fixed_width() { p.min(3) } else { p }

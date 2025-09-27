@@ -101,8 +101,12 @@ fn combine_secs_and_millis(secs: u8, millis: u16, opt: &MillisecondOption) -> St
         format!("{}", secs)
     };
 
-    let millis_str = format!("{millis:03}");
     let precision = opt.seconds.precision() as _;
+    if precision == 0 {
+        return secs_str;
+    }
+
+    let millis_str = format!("{millis:03}");
     format!(
         "{}.{}",
         secs_str,
