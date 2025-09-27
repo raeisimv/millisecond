@@ -74,7 +74,7 @@ mod tests {
             assert_eq!(
                 Millisecond::from_millis(millis).pretty_with(MillisecondOption {
                     seconds: SecondsOptions::CombineWith {
-                        precision,
+                        precision: Some(precision),
                         fixed_width: true
                     },
                     ..Default::default()
@@ -86,11 +86,12 @@ mod tests {
     #[test]
     fn should_combine_seconds_and_milliseconds_with_precision() {
         let cases = [
-            (1100, 1, "1.1s"),
-            (1100, 2, "1.10s"),
-            (1100, 3, "1.100s"),
-            (1100, 0, "1.1s"),   // clamp
-            (1100, 4, "1.100s"), // clamp
+            (1100, None, "1.1s"),
+            (1100, Some(0), "1s"),
+            (1100, Some(1), "1.1s"),
+            (1100, Some(2), "1.10s"),
+            (1100, Some(3), "1.100s"),
+            (1100, Some(4), "1.100s"), // clamp
         ];
         for (millis, precision, expected) in cases {
             assert_eq!(
@@ -109,20 +110,27 @@ mod tests {
     fn should_format_with_colon_notation() {
         let cases = [
             // Default formats
-            (1000, "0:01"),
-            (1543, "0:01.5"),
-            (1000 * 60, "1:00"),
-            (1000 * 90, "1:30"),
-            (95_543, "1:35.5"),
-            ((1000 * 60 * 10) + 543, "10:00.5"),
-            ((1000 * 60 * 59) + (1000 * 59) + 543, "59:59.5"),
+            (1000, None, "0:01"),
+            (1543, None, "0:01.5"),
+            (1000 * 60, None, "1:00"),
+            (1000 * 90, None, "1:30"),
+            (95_543, None, "1:35.5"),
+            ((1000 * 60 * 10) + 543, None, "10:00.5"),
+            ((1000 * 60 * 59) + (1000 * 59) + 543, None, "59:59.5"),
             (
                 (1000 * 60 * 60 * 15) + (1000 * 60 * 59) + (1000 * 59) + 543,
+                None,
                 "15:59:59.5",
             ),
         ];
-        for (millis, expected) in cases {
-            let act = Millisecond::from_millis(millis).pretty_with(MillisecondOption::colon());
+        for (millis, precision, expected) in cases {
+            let act = Millisecond::from_millis(millis).pretty_with(MillisecondOption {
+                seconds: SecondsOptions::CombineWith {
+                    precision,
+                    fixed_width: false,
+                },
+                ..MillisecondOption::colon()
+            });
             assert_eq!(act, expected,);
         }
     }
