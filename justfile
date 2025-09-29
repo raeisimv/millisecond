@@ -15,7 +15,11 @@ build:
 
 publish:
     just build
+    just push
     cargo publish
+
+push:
+    git push origin master
 
 setup:
     #install pre-commit hook
