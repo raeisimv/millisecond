@@ -229,4 +229,31 @@ mod tests {
             assert_eq!(act, expected);
         }
     }
+    #[test]
+    fn should_cooperate_dominant_only_flag_with_the_long_flag() {
+        let cases = [
+            (1000, "1 second"),
+            (1000 + 400, "1 second"),
+            ((1000 * 2) + 400, "2 seconds"),
+            (1000 * 5, "5 seconds"),
+            (1000 * 55, "55 seconds"),
+            (1000 * 67, "1 minute"),
+            (1000 * 60 * 5, "5 minutes"),
+            (1000 * 60 * 67, "1 hour"),
+            (1000 * 60 * 60 * 12, "12 hours"),
+            (1000 * 60 * 60 * 40, "1 day"),
+            (1000 * 60 * 60 * 999, "41 days"),
+            (1000 * 60 * 60 * 24 * 465, "1 year"),
+            (1000 * 60 * 67 * 24 * 750, "2 years"),
+        ];
+        for (i, (millis, expected)) in cases.into_iter().enumerate() {
+            let opt = MillisecondOption {
+                format: OutputFormat::Long,
+                dominant_only: true,
+                ..MillisecondOption::default()
+            };
+            let act = Millisecond::from_millis(millis).pretty_with(opt);
+            assert_eq!(act, expected, "{i}, millis: {millis}");
+        }
+    }
 }
