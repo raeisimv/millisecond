@@ -20,6 +20,16 @@ fn main() {
     println!("{}", dur.relative());
     // displays: about a year ago
 
+    // Combine seconds and milliseconds with custom options
+    println!("{}", core::time::Duration::from_millis(448_123).pretty_with(MillisecondOption {
+        seconds: SecondsOptions::CombineWith {
+            precision: Some(2),
+            fixed_width: false,
+        },
+        ..Default::default()
+    }));
+    // displays: 7m 28.12s
+
     // the previous solution still works
     let ms = Millisecond::from_millis(33_023_448_000);
     println!("{}", ms.pretty());
