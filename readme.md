@@ -1,15 +1,6 @@
 # Millisecond crate
 
-A better way to format and display duration, which converts `33023448000ms` to `1y 17d 5h 10m 48s` or relatively
-timestamp of`about a year ago`.
-
-## Install
-
-In your Rust project's root directory run:
-
-```shell
-$ cargo add millisecond
-```
+A better way to format and display duration; this crate converts `33023448000` (ms) to `1y 17d 5h 10m 48s` or other configurable formats such as relatively timestamp (`about a year ago`).
 
 ## Example
 
@@ -37,22 +28,27 @@ fn main() {
 ```
 
 ## Options
-All options are represented by the `MillisecondOption` struct; which has the following fields:
+
+All options are represented by the `MillisecondOption` struct with following fields:
 
 ### format
+
 Determines whether to format the final duration string either short, long, or colon separated.\
 Example: `1h 2m 3s`\
 Type: `OutputFormat` enum\
 Default: `Short`
+
 - `Short`: Uses short labels. Example: `1y 17d 5h 10m 48s`
 - `Long`: Uses long labels. Example: `1 year 17 days 5 hours 10 minutes 48 seconds`
 - `Colon`: Uses no labels but colon separated values. Example: `1:17:05:10:48`
 
 ### seconds
+
 Determines whether to display seconds and milliseconds; combine or separate them.\
 Example: `1 second 2 milliseconds`\
 Type: `SecondsFormat` enum\
 Default: `Separate`\
+
 - `Hide`: Hides seconds and milliseconds.
 - `Separate`: Separates seconds and milliseconds into two single digits. Example: `1s 2ms`
 - `Combine`: Combines seconds and milliseconds into a single float value. Example: `1.2s`
@@ -61,12 +57,14 @@ Default: `Separate`\
   - `fixed_width`: whether milliseconds should be displayed with a fixed width. Default: `false`
 
 ### dominant_only
+
 Determines whether displays the most dominant part only (the most left part). The `unit_count` flag takes precedence over this setting.\
 Example: `1y 2d` -> `1y`\
 Type: `bool`\
 Default: `false`
 
 ### unit_count
+
 Determines the maximum number of units to display in the formatted string (from years towards nanoseconds).
 Default is `None`, which means all units will be displayed.
 This flag takes precedence over the `dominant_only` setting.\
@@ -75,31 +73,36 @@ Type: `Option<usize>`\
 Default: `None`
 
 ### days_instead_of_years
+
 Determines whether displays time durations in days rather than converting them into years.\
 Example: `1y 1d` -> `366d`\
 Type: `bool`\
 Default: `false`
 
 ### format_sub_milliseconds
+
 Determines whether displays and formats microseconds and nanoseconds if present.\
 Example: `1s 2ms 3µs 4ns`\
 Type: `bool`\
 Default: `false`
 
 ### separator
+
 Determines the separator between units. The default value is a `Space` but can be overridden, e.g. in colon notation `Default` gets converted to `Colon` but `Space` stands persisted. \
 Example: `1y 2d` -> `1y-2d`\
 Type: `Separator` enum\
 Default: `Separator::Default`
+
 - `Default`: Displays units a space as separator. Example: `1y 2d`
 - `None`: Displays units without a separator. Example: `1y2d`
 - `Space`: Displays units with a space as separator. Example: `1y 2d`
 - `Dash`: Displays units with a dash as separator. Example: `1y-2d`
 - `Custom(&str)`: Displays units with a custom separator. Example: `1y_custom_2d`
 
-***
+---
 
 ### Day of Week
+
 Calculating the weekday could be easy if the duration was calculated from a known epoch. The `weekday` function
 is implemented to convert the duration into the proper weekday value (enum).
 
@@ -113,13 +116,13 @@ fn main() {
 }
 ```
 
-***
+---
 
 ### License
 
 [MIT](./LICENSE-MIT)
 
-***
+---
 
 ### Inspiration
 
