@@ -37,5 +37,15 @@ mod tests {
         // the previous solution still works
         let ms = Millisecond::from_millis(33_023_448_000);
         assert_eq!("1y 17d 5h 10m 48s", ms.pretty());
+
+        // Combine seconds and milliseconds
+        let combine = core::time::Duration::from_millis(448_123).pretty_with(MillisecondOption {
+            seconds: SecondsOptions::CombineWith {
+                precision: Some(2),
+                fixed_width: false,
+            },
+            ..Default::default()
+        });
+        assert_eq!("7m 28.12s", combine);
     }
 }
